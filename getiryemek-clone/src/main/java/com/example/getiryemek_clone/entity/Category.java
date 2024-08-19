@@ -1,10 +1,8 @@
 package com.example.getiryemek_clone.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,16 +11,22 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(name = "name",nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "category")
+    @JsonManagedReference
     private List<Food> foods;
 
+    public Category(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

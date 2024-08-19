@@ -1,29 +1,28 @@
 package com.example.getiryemek_clone.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(name = "name",nullable = false)
     private String name;
 
-    @Column(name = "address")
-    private String address;
+    @OneToOne(mappedBy = "restaurant")
+    private Address address;
 
     @Column(name = "phoneNumber",nullable = false)
     private String phoneNumber;
@@ -32,6 +31,7 @@ public class Restaurant {
     private List<Food> foods;
 
     @OneToMany(mappedBy = "restaurant")
+    @JsonBackReference
     private List<RestaurantAdmin> admins;
 
 

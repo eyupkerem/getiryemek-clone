@@ -1,5 +1,7 @@
 package com.example.getiryemek_clone.entity;
 
+import com.example.getiryemek_clone.entity.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +19,7 @@ public class Costumer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(name = "name",nullable = false)
     private String name;
@@ -25,10 +27,10 @@ public class Costumer {
     @Column(name = "surname")
     private String surname;
 
-    @Column(name = "email")
+    @Column(name = "email" , nullable = false)
     private String email;
 
-    @Column(name = "phoneNumber")
+    @Column(name = "phoneNumber" , nullable = false)
     private String phoneNumber;
 
     @Column(name = "password",nullable = false)
@@ -37,6 +39,12 @@ public class Costumer {
     @OneToMany(mappedBy = "costumer")
     private List<Address> addresses;
 
+
     @OneToMany(mappedBy = "costumer")
     private List<Order> orders;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
 }

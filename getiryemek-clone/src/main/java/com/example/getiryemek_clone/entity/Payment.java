@@ -20,7 +20,7 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "order_id")
@@ -39,5 +39,14 @@ public class Payment {
 
     @Column(name = "paymentTime")
     private LocalDateTime paymentTime;
+
+
+    //BASket basketin içöiiçnde product ve user Id
+    // Eğer userda basket yoksa create et
+    // VArsa ürünü ekle
+    // Paymentı temizle
+    //  Paymentta sepeti 0 la
+
+
 
 }

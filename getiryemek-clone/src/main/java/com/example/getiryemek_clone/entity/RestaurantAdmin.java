@@ -1,5 +1,7 @@
 package com.example.getiryemek_clone.entity;
 
+import com.example.getiryemek_clone.entity.enums.Role;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +17,7 @@ public class RestaurantAdmin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(name = "name",nullable = false)
     private String name;
@@ -28,5 +30,12 @@ public class RestaurantAdmin {
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
+    @JsonManagedReference
     private Restaurant restaurant;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
 }
