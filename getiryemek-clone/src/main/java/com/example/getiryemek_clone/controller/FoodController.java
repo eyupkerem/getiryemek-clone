@@ -6,6 +6,7 @@ import com.example.getiryemek_clone.dto.request.FoodDto;
 import com.example.getiryemek_clone.dto.response.ApiResponse;
 import com.example.getiryemek_clone.entity.update.FoodUpdateDto;
 import com.example.getiryemek_clone.service.FoodService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +57,8 @@ public class FoodController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @GetMapping("/foodWithRestaurantAndCategory")
+    //@GetMapping("/foodWithRestaurantAndCategory")
+    @GetMapping("/byRestaurantAndCategory")
     public ResponseEntity<ApiResponse> foodWithRestaurantAndCategory(
             @RequestParam Long restaurantId,
             @RequestParam Long categoryId){

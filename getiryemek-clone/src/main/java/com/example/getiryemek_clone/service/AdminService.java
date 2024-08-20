@@ -24,7 +24,7 @@ public class AdminService {
     public ApiResponse<List<Admin>> getAllAdmins() {
         List<Admin> adminList = adminRepository.findAll()
                 .stream().collect(Collectors.toList());
-        return ApiResponse.success("Admin Liist founded ", adminList);
+        return ApiResponse.success("Admin List founded ", adminList);
     }
 
     public ApiResponse<AdminResponse> findById(Long id){

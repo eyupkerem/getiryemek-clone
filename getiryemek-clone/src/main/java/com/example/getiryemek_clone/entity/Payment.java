@@ -22,16 +22,9 @@ public class Payment {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
 
-    @Column(name = "amount")
-    private double amount;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "paymentStatus")
-    private PaymentStatu paymentStatus;
+    @Column(name = "basket_id")
+    private Long basketId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "paymentType")
@@ -48,5 +41,16 @@ public class Payment {
     //  Paymentta sepeti 0 la
 
 
+    // @OneToOne
+    // @JoinColumn(name = "order_id")
+    //  private Order order;
+
+
+    // @Column(name = "amount")
+    // private double amount;
+
+    // @Enumerated(EnumType.STRING)
+    // @Column(name = "paymentStatus")
+    // private PaymentStatu paymentStatus;
 
 }

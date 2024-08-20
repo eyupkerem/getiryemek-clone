@@ -41,6 +41,7 @@ public class Food {
     @JsonIgnore
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "food")
-    private List<OrderItem> orderItems;
+
+    // @OneToMany(mappedBy = "food")
+    // private List<OrderItem> orderItems;
 }

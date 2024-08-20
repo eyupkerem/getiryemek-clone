@@ -34,6 +34,19 @@ public class CostumerController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @GetMapping("/{phoneNumber}")
+    public ResponseEntity<ApiResponse> getCostumerByPhoneNumber(@PathVariable String phoneNumber){
+        ApiResponse<CostumerResponse> response = costumerService.findByPhoneNumber(phoneNumber);
+        return response.isSuccess()? ResponseEntity.ok(response)
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+    @GetMapping("/{email}")
+    public ResponseEntity<ApiResponse> getCostumerByEmail(@PathVariable String email){
+        ApiResponse<CostumerResponse> response = costumerService.findByEmail(email);
+        return response.isSuccess()? ResponseEntity.ok(response)
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @PutMapping("/{costumerId}")
     public ResponseEntity<ApiResponse> updateCostumer(@PathVariable Long costumerId
             , @RequestBody CostumerUpdateDto updateDto){

@@ -4,5 +4,6 @@ public enum PaymentType {
     CASH,
     CREDITCARD,
     ONLINE,
-    TICKET
+    TICKET,
+    CANCELED
 }
