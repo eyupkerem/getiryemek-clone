@@ -13,20 +13,18 @@ import lombok.*;
 public class Admin{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name",nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "surname")
     private String surname;
 
-    @Column(name = "password",nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(nullable = false)
     private Role role;
 
 }

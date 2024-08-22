@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -16,19 +17,17 @@ import java.util.List;
 public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name",nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "price",nullable = false)
-    private double price;
+    @Column(nullable = false)
+    private BigDecimal price;
 
-    @Column(name = "imageUrl")
-    private String imageURL;
+    @Column(name = "image_url")
+    private String imageUrl;
 
-    @Column(name = "ingredients")
     private String ingredients;
 
     @ManyToOne
@@ -42,6 +41,4 @@ public class Food {
     private Restaurant restaurant;
 
 
-    // @OneToMany(mappedBy = "food")
-    // private List<OrderItem> orderItems;
 }

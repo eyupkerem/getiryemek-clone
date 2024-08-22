@@ -18,33 +18,27 @@ import java.util.List;
 public class Costumer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name",nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "surname")
     private String surname;
 
-    @Column(name = "email" , nullable = false)
+    @Column(nullable = false)
     private String email;
 
-    @Column(name = "phoneNumber" , nullable = false)
+    @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(name = "password",nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @OneToMany(mappedBy = "costumer")
     private List<Address> addresses;
 
-
-    @OneToMany(mappedBy = "costumer")
-    private List<Order> orders;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(nullable = false)
     private Role role;
 
 }

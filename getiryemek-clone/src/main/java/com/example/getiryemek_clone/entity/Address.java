@@ -14,16 +14,14 @@ import lombok.*;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "street")
     private String street;
 
     @Column(name = "city",nullable = false)
     private String city;
 
-    @Column(name = "zipCode")
+    @Column(name = "zip_Code")
     private String zipCode;
 
     @ManyToOne

@@ -15,11 +15,10 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="Paymentt")
+@Table
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
 
@@ -27,30 +26,10 @@ public class Payment {
     private Long basketId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "paymentType")
+    @Column(name = "payment_Type")
     private PaymentType paymentType;
 
-    @Column(name = "paymentTime")
+    @Column(name = "payment_Time")
     private LocalDateTime paymentTime;
-
-
-    //BASket basketin içöiiçnde product ve user Id
-    // Eğer userda basket yoksa create et
-    // VArsa ürünü ekle
-    // Paymentı temizle
-    //  Paymentta sepeti 0 la
-
-
-    // @OneToOne
-    // @JoinColumn(name = "order_id")
-    //  private Order order;
-
-
-    // @Column(name = "amount")
-    // private double amount;
-
-    // @Enumerated(EnumType.STRING)
-    // @Column(name = "paymentStatus")
-    // private PaymentStatu paymentStatus;
 
 }

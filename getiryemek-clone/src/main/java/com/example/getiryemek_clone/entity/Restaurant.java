@@ -15,16 +15,15 @@ import java.util.List;
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name",nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @OneToOne(mappedBy = "restaurant")
     private Address address;
 
-    @Column(name = "phoneNumber",nullable = false)
+    @Column(name = "phone_number",nullable = false)
     private String phoneNumber;
 
     @OneToMany(mappedBy = "restaurant")

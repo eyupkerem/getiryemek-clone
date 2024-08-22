@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.catalina.User;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -27,9 +28,9 @@ public class Basket {
     private List<BasketItem> items;
 
 
-    private double totalAmount;
+    private BigDecimal totalAmount;
 
-    @Column(name = "payment_id" , nullable = true)
+    @Column(name = "payment_id")
     private Long paymentId;
 
 }

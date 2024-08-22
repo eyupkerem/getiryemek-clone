@@ -78,7 +78,8 @@ public class FoodService {
                         tempFood -> {
                             tempFood.setName(updateDto.getName());
                             tempFood.setPrice(updateDto.getPrice());
-                            tempFood.setImageURL(updateDto.getImageURL());
+                            tempFood.setPrice(updateDto.getPrice());
+                            tempFood.setImageUrl(updateDto.getImageURL());
                             tempFood.setIngredients(updateDto.getIngredients());
                             //update Category
                             foodRepository.save(tempFood);

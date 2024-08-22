@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminDto {
+
     private String name;
+    private String surname;
     private String password;
 
 

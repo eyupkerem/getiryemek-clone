@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RestaurantAdminDto {
     private String name;
+    private String surname;
     private String password;
 
 }

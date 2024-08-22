@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -93,10 +94,9 @@ public class BasketService {
 
     public void updateBasketTotalAmount(Basket basket) {
 
-        double totalAmount = basket.getItems().stream()
-                .mapToDouble(item -> item.getFood().getPrice() * item.getQuantity())
-                .sum();
-
+        BigDecimal totalAmount = basket.getItems().stream()
+                .map(item -> item.getFood().getPrice().multiply(new BigDecimal(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         basket.setTotalAmount(totalAmount);
         basketRepository.save(basket);
     }

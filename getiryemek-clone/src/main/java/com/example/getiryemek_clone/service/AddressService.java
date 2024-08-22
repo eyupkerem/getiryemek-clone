@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 public class AddressService {
 
     private final AddressRepository addressRepository;
-  //  private final CostumerMapper costumerMapper;
     private final AddressMapper addressMapper;
     private final CostumerService costumerService;
     private final RestaurantService restaurantService;
@@ -96,7 +95,6 @@ public class AddressService {
                     return ApiResponse.success("Address updated succesfully", address);
                 })
                 .orElseGet(() -> ApiResponse.failure("Addres could not updated"));
-
     }
 
 }

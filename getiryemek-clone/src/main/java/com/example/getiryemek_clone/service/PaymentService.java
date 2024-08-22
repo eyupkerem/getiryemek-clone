@@ -11,6 +11,7 @@ import com.example.getiryemek_clone.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class PaymentService {
 
         List<BasketItem> items = new ArrayList<>(basket.getItems());
         basket.getItems().clear();
-        basket.setTotalAmount(0);
+        basket.setTotalAmount(BigDecimal.ZERO);
 
         for (BasketItem item : items) {
             basketItemRepository.delete(item);

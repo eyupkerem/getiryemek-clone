@@ -44,11 +44,14 @@ public class RestaurantService {
     }
 
     public ApiResponse<RestaurantResponse> add(Long addressId , RestaurantDto restaurantDto) {
-        Address address = addressRepository.findById(addressId).orElseThrow(
-                ()-> new RuntimeException("Address not found") );
-
         Restaurant newRestaurant =  restaurantMapper.toRestaurant(restaurantDto);
-        newRestaurant.setAddress(address);
+
+        if (addressId != null) {
+            Address address = addressRepository.findById(addressId).orElse(null);
+            newRestaurant.setAddress(address);
+        } else {
+            newRestaurant.setAddress(null);
+        }
         restaurantRepository.save(newRestaurant);
         return ApiResponse.success("Restaurant added succesfully" , restaurantMapper.toRestaurantResponse(newRestaurant));
     }

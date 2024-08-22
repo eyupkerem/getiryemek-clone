@@ -41,14 +41,14 @@ public class RestaurantController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PostMapping("/{addressId}")
-    public ResponseEntity<ApiResponse> add(@PathVariable("addressId") Long addressId,
+    @PostMapping
+    public ResponseEntity<ApiResponse> add(@RequestParam(required = false) Long addressId,
                                            @RequestBody RestaurantDto restaurantDto){
-        System.out.println("Restaurant DTO : " + restaurantDto.toString());
         ApiResponse<RestaurantResponse> response = restaurantService.add( addressId, restaurantDto);
         return response.isSuccess()? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
 
 
 
