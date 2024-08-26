@@ -22,28 +22,33 @@ public class CategoryService {
     private final FoodRepository foodRepository;
     private final CategoryMapper categoryMapper;
 
-    public ApiResponse<List<Category>> getAllCategories() {
-        List<Category> categoryList = categoryRepository.findAll().stream().collect(Collectors.toList());
+    public ApiResponse<List<CategoryResponse>> getAllCategories() {
+        List<CategoryResponse> categoryList = categoryRepository.findAll()
+                .stream()
+                .map(category -> categoryMapper.toCategoryResponse(category))
+                .collect(Collectors.toList());
         return ApiResponse.success("founded" , categoryList);
     }
 
-    public ApiResponse<Category> findById(Long categoryId) {
+    public ApiResponse<CategoryResponse> findById(Long categoryId) {
 
         return categoryRepository.findById(categoryId)
-                .map(category -> ApiResponse.success("Category founded" , category))
+                .map(category -> ApiResponse.success("Category founded"
+                        , categoryMapper.toCategoryResponse(category)))
                 .orElseGet(()->ApiResponse.failure("Category could ont found"));
     }
 
-    public ApiResponse<Category> findByName(String categoryName) {
+    public ApiResponse<CategoryResponse> findByName(String categoryName) {
 
         return categoryRepository.findByName(categoryName)
-                .map(category -> ApiResponse.success("Category founded" , category))
+                .map(category -> ApiResponse.success("Category founded"
+                        , categoryMapper.toCategoryResponse(category)))
                 .orElseGet(()->ApiResponse.failure("Category could ont found"));
     }
 
     public ApiResponse<CategoryResponse> add(CategoryDto categoryDto) {
         return categoryRepository.findByName(categoryDto.getName())
-                .map(category -> ApiResponse.<CategoryResponse>failure("Category already exists")) // Generic tipi belirttim
+                .map(category -> ApiResponse.<CategoryResponse>failure("Category already exists"))
                 .orElseGet(() -> {
                     Category newCategory = categoryMapper.toCategory(categoryDto);
                     Category savedCategory = categoryRepository.save(newCategory);
@@ -62,6 +67,4 @@ public class CategoryService {
                 })
                 .orElseGet(()-> ApiResponse.failure("Category could not found"));
     }
-
-
 }

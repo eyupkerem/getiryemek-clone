@@ -1,5 +1,6 @@
 package com.example.getiryemek_clone.service;
 
+import com.example.getiryemek_clone.config.PasswordEncoderConfig;
 import com.example.getiryemek_clone.dto.response.CostumerResponse;
 import com.example.getiryemek_clone.entity.Costumer;
 import com.example.getiryemek_clone.entity.update.CostumerUpdateDto;
@@ -21,17 +22,22 @@ import static com.example.getiryemek_clone.entity.enums.Role.USER;
 public class CostumerService {
     private final CostumerRepository costumerRepository;
     private final CostumerMapper costumerMapper;
-    public ApiResponse<List<Costumer>> getAllCostumers() {
-        List<Costumer> costumerList = costumerRepository.findAll()
-                .stream().collect(Collectors.toList());
+    private final PasswordEncoderConfig passwordEncoderConfig;
+
+    public ApiResponse<List<CostumerResponse>> getAllCostumers() {
+        List<CostumerResponse> costumerList = costumerRepository.findAll()
+                .stream()
+                .map(costumer -> costumerMapper.toCostumerResponse(costumer))
+                .collect(Collectors.toList());
         return ApiResponse.success("Costumer List found", costumerList);
     }
 
-    public ApiResponse<Costumer> findById(Long id) {
+    public ApiResponse<CostumerResponse> findById(Long id) {
 
         return  costumerRepository.findById(id)
                 .map(costumer ->
-                        ApiResponse.success("Costumer founded sucesfully" , costumer))
+                        ApiResponse.success("Costumer founded sucesfully"
+                                , costumerMapper.toCostumerResponse(costumer)))
                 .orElseGet(()->ApiResponse.failure("Costumer could not founded"));
     }
 
@@ -57,23 +63,28 @@ public class CostumerService {
         }
 
         Costumer newCostumer = costumerMapper.toCostumer(costumerDto);
+        String hashedPassword = passwordEncoderConfig.hashPassword(costumerDto.getPassword());
+        newCostumer.setPassword(hashedPassword);
+
+
         newCostumer.setRole(USER);
         costumerRepository.save(newCostumer);
-        return ApiResponse.success("Costumer added succesfully" , costumerMapper.toCostumerResponse(newCostumer));
+        return ApiResponse.success("Costumer added successfully" , costumerMapper.toCostumerResponse(newCostumer));
     }
 
-    public ApiResponse<Costumer> deleteCostumer(Long costumerId) {
+    public ApiResponse<CostumerResponse> deleteCostumer(Long costumerId) {
         return costumerRepository.findById(costumerId)
                 .map(costumer -> {
                     costumerRepository.deleteById(costumerId);
-                    return ApiResponse.success("Costumer successfully deleted", costumer);
+                    return ApiResponse.success("Costumer successfully deleted"
+                            ,costumerMapper.toCostumerResponse(costumer) );
                 })
                 .orElseGet(() -> ApiResponse.failure("Costumer could not be found"));
     }
 
-    public ApiResponse<Costumer> update(Long costumerId, CostumerUpdateDto updateDto) {
+    public ApiResponse<CostumerResponse> update(Long costumerId, CostumerUpdateDto updateDto) {
 
-        if (updateDto.getName().isEmpty() ||
+       /* if (updateDto.getName().isEmpty() ||
                 updateDto.getSurname().isEmpty() ||
                 updateDto.getPhoneNumber().isEmpty() ||
                 updateDto.getEmail().isEmpty() ||
@@ -89,9 +100,36 @@ public class CostumerService {
                     costumer.setEmail(updateDto.getEmail());
                     costumer.setPassword(updateDto.getPassword());
 
-                    return ApiResponse.success("Costumer updated succesfully " , costumer);
+                    return ApiResponse.success("Costumer updated succesfully "
+                            , costumerMapper.toCostumerResponse(costumer));
                 })
                 .orElseGet(()-> ApiResponse.failure("Costumer could not updated"));
-    }
+    */
 
+        Costumer costumer = costumerRepository.findById(costumerId).orElse(null);
+        if (costumer==null){
+            return ApiResponse.failure("COSTUMER_NOT_FOUND");
+        }
+
+        if(updateDto.getSurname()!=null){
+            costumer.setSurname(updateDto.getSurname());
+        }
+
+        if(updateDto.getName()!=null){
+            costumer.setName(updateDto.getName());
+        }
+        if (updateDto.getPhoneNumber()!=null){
+            costumer.setPhoneNumber(updateDto.getPhoneNumber());
+        }
+        if(updateDto.getEmail() != null){
+            costumer.setEmail(updateDto.getEmail());
+        }
+        if (updateDto.getPassword() !=null){
+            costumer.setPassword(passwordEncoderConfig.hashPassword(updateDto.getPassword()));
+        }
+        return ApiResponse.success("COSTUMER UPDATED SUCCESSFULLY" , costumerMapper.toCostumerResponse(costumer));
+    }
 }
+
+
+

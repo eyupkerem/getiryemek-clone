@@ -9,4 +9,6 @@ public interface CostumerRepository extends JpaRepository<Costumer,Long> {
     Optional<Costumer> findByEmail(String email);
 
     Optional<Costumer> findByPhoneNumber(String phoneNumber);
+
+    Optional<Object> findByName(String username);
 }

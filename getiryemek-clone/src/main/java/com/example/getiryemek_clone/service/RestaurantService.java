@@ -2,7 +2,6 @@ package com.example.getiryemek_clone.service;
 
 import com.example.getiryemek_clone.dto.response.RestaurantResponse;
 import com.example.getiryemek_clone.entity.Address;
-import com.example.getiryemek_clone.entity.Food;
 import com.example.getiryemek_clone.entity.Restaurant;
 import com.example.getiryemek_clone.entity.update.RestaurantUpdateDto;
 import com.example.getiryemek_clone.mapper.RestaurantMapper;
@@ -10,6 +9,7 @@ import com.example.getiryemek_clone.repository.AddressRepository;
 import com.example.getiryemek_clone.repository.RestaurantRepository;
 import com.example.getiryemek_clone.dto.request.RestaurantDto;
 import com.example.getiryemek_clone.dto.response.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,23 +23,29 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final AddressRepository addressRepository;
     private final RestaurantMapper restaurantMapper;
+    private final JwtService jwtService;
 
-    public ApiResponse<List<Restaurant>> getAllRestaurants() {
-        List<Restaurant> restaurantList = restaurantRepository.findAll();
+    public ApiResponse<List<RestaurantResponse>> getAllRestaurants() {
+        List<RestaurantResponse> restaurantList = restaurantRepository.findAll()
+                .stream()
+                .map(restaurant -> restaurantMapper.toRestaurantResponse(restaurant))
+                .collect(Collectors.toList());
         return ApiResponse.success("Restaurant list founded " , restaurantList);
     }
 
-    public ApiResponse<Restaurant> findById(Long restaurantId) {
+    public ApiResponse<RestaurantResponse> findById(Long restaurantId) {
 
         return restaurantRepository.findById(restaurantId)
-                .map(restaurant -> ApiResponse.success("Restaurant founded" , restaurant))
+                .map(restaurant -> ApiResponse.success("Restaurant founded"
+                        , restaurantMapper.toRestaurantResponse(restaurant) ))
                 .orElseGet(()-> ApiResponse.failure("Restaurant could not found"));
 
     }
 
-    public ApiResponse<Restaurant> findByName(String restaurantName) {
+    public ApiResponse<RestaurantResponse> findByName(String restaurantName) {
         return restaurantRepository.findByName(restaurantName)
-                .map(restaurant -> ApiResponse.success("Restaurant founded" , restaurant))
+                .map(restaurant -> ApiResponse.success("Restaurant founded"
+                        , restaurantMapper.toRestaurantResponse(restaurant) ))
                 .orElseGet(()-> ApiResponse.failure("Restaurant could not found"));
     }
 
@@ -56,7 +62,18 @@ public class RestaurantService {
         return ApiResponse.success("Restaurant added succesfully" , restaurantMapper.toRestaurantResponse(newRestaurant));
     }
 
-    public ApiResponse<Restaurant> update(Long restaurantId, RestaurantUpdateDto updateDto , Long addressId) {
+    public ApiResponse<RestaurantResponse> update(HttpServletRequest httpServletRequest
+            , RestaurantUpdateDto updateDto
+            , Long addressId) {
+
+        String token = httpServletRequest.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7).trim();
+        } else {
+            throw new RuntimeException("JWT token is missing or invalid");
+        }
+
+        Long id= jwtService.extractId(token);
 
         if (updateDto.getName() == null || updateDto.getName().isEmpty() ||
                 updateDto.getPhoneNumber() == null || updateDto.getPhoneNumber().isEmpty()) {
@@ -67,25 +84,26 @@ public class RestaurantService {
                 ()-> new RuntimeException("Address could not found !")
         );
 
-        return restaurantRepository.findById(restaurantId)
+        return restaurantRepository.findById(id)
                 .map(restaurant -> {
                     restaurant.setName(updateDto.getName());
                     restaurant.setPhoneNumber(updateDto.getPhoneNumber());
                     restaurant.setAddress(address);
                     restaurantRepository.save(restaurant);
-                    return ApiResponse.success("Restaurant updated successfully", restaurant);
+                    return ApiResponse.success("Restaurant updated successfully"
+                            , restaurantMapper.toRestaurantResponse(restaurant) );
                 })
                 .orElseGet(() -> ApiResponse.failure("Restaurant not found"));
     }
 
 
-    public ApiResponse<Restaurant> deleteRestaurant(Long id) {
+    public ApiResponse<RestaurantResponse> deleteRestaurant(Long id) {
         return restaurantRepository.findById(id)
                 .map(restaurant -> {
                     restaurantRepository.deleteById(id);
-                    return ApiResponse.success("Restaurant deleted sucessfully" , restaurant);
+                    return ApiResponse.success("Restaurant deleted sucessfully"
+                            , restaurantMapper.toRestaurantResponse(restaurant) );
                 })
                 .orElseGet(()->ApiResponse.failure("Restaıurant could not deleted"));
     }
-
 }

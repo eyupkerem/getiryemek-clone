@@ -5,22 +5,17 @@ import com.example.getiryemek_clone.entity.Restaurant;
 import com.example.getiryemek_clone.repository.FoodRepository;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
 public class FoodResponse {
-
-
     private String name;
-
-    private double price;
-
+    private BigDecimal price;
     private String imageURL;
-
     private String ingredients;
-
     private Category category;
-
     private Restaurant restaurant;
 }

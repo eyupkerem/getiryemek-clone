@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-19T10:00:59+0300",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2024-08-26T10:12:22+0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class FoodMapperImpl implements FoodMapper {
@@ -20,9 +20,14 @@ public class FoodMapperImpl implements FoodMapper {
             return null;
         }
 
-        Food food = new Food();
+        Food.FoodBuilder food = Food.builder();
 
-        return food;
+        food.name( foodDto.getName() );
+        food.price( foodDto.getPrice() );
+        food.imageUrl( foodDto.getImageUrl() );
+        food.ingredients( foodDto.getIngredients() );
+
+        return food.build();
     }
 
     @Override
@@ -31,9 +36,14 @@ public class FoodMapperImpl implements FoodMapper {
             return null;
         }
 
-        FoodDto foodDto = new FoodDto();
+        FoodDto.FoodDtoBuilder foodDto = FoodDto.builder();
 
-        return foodDto;
+        foodDto.name( food.getName() );
+        foodDto.price( food.getPrice() );
+        foodDto.imageUrl( food.getImageUrl() );
+        foodDto.ingredients( food.getIngredients() );
+
+        return foodDto.build();
     }
 
     @Override
@@ -42,8 +52,14 @@ public class FoodMapperImpl implements FoodMapper {
             return null;
         }
 
-        FoodResponse foodResponse = new FoodResponse();
+        FoodResponse.FoodResponseBuilder foodResponse = FoodResponse.builder();
 
-        return foodResponse;
+        foodResponse.name( food.getName() );
+        foodResponse.price( food.getPrice() );
+        foodResponse.ingredients( food.getIngredients() );
+        foodResponse.category( food.getCategory() );
+        foodResponse.restaurant( food.getRestaurant() );
+
+        return foodResponse.build();
     }
 }

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-19T10:00:59+0300",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2024-08-26T10:12:22+0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class RestaurantAdminMapperImpl implements RestaurantAdminMapper {
@@ -22,6 +22,11 @@ public class RestaurantAdminMapperImpl implements RestaurantAdminMapper {
 
         RestaurantAdmin restaurantAdmin = new RestaurantAdmin();
 
+        restaurantAdmin.setName( restaurantAdminDto.getName() );
+        restaurantAdmin.setSurname( restaurantAdminDto.getSurname() );
+        restaurantAdmin.setPassword( restaurantAdminDto.getPassword() );
+        restaurantAdmin.setEmail( restaurantAdminDto.getEmail() );
+
         return restaurantAdmin;
     }
 
@@ -31,9 +36,14 @@ public class RestaurantAdminMapperImpl implements RestaurantAdminMapper {
             return null;
         }
 
-        RestaurantAdminDto restaurantAdminDto = new RestaurantAdminDto();
+        RestaurantAdminDto.RestaurantAdminDtoBuilder restaurantAdminDto = RestaurantAdminDto.builder();
 
-        return restaurantAdminDto;
+        restaurantAdminDto.name( restaurantAdmin.getName() );
+        restaurantAdminDto.surname( restaurantAdmin.getSurname() );
+        restaurantAdminDto.password( restaurantAdmin.getPassword() );
+        restaurantAdminDto.email( restaurantAdmin.getEmail() );
+
+        return restaurantAdminDto.build();
     }
 
     @Override
@@ -43,6 +53,11 @@ public class RestaurantAdminMapperImpl implements RestaurantAdminMapper {
         }
 
         RestaurantAdminResponse restaurantAdminResponse = new RestaurantAdminResponse();
+
+        restaurantAdminResponse.setName( restaurantAdmin.getName() );
+        restaurantAdminResponse.setSurname( restaurantAdmin.getSurname() );
+        restaurantAdminResponse.setEmail( restaurantAdmin.getEmail() );
+        restaurantAdminResponse.setRestaurant( restaurantAdmin.getRestaurant() );
 
         return restaurantAdminResponse;
     }

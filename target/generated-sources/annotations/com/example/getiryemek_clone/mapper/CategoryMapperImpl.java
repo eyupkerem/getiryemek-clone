@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-19T10:00:59+0300",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2024-08-26T10:12:22+0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class CategoryMapperImpl implements CategoryMapper {
@@ -20,12 +20,11 @@ public class CategoryMapperImpl implements CategoryMapper {
             return null;
         }
 
-        int id = 0;
-        String name = null;
+        Category.CategoryBuilder category = Category.builder();
 
-        Category category = new Category( id, name );
+        category.name( categoryDto.getName() );
 
-        return category;
+        return category.build();
     }
 
     @Override
@@ -34,9 +33,11 @@ public class CategoryMapperImpl implements CategoryMapper {
             return null;
         }
 
-        CategoryDto categoryDto = new CategoryDto();
+        CategoryDto.CategoryDtoBuilder categoryDto = CategoryDto.builder();
 
-        return categoryDto;
+        categoryDto.name( category.getName() );
+
+        return categoryDto.build();
     }
 
     @Override
@@ -45,19 +46,10 @@ public class CategoryMapperImpl implements CategoryMapper {
             return null;
         }
 
-        CategoryResponse categoryResponse = new CategoryResponse();
+        CategoryResponse.CategoryResponseBuilder categoryResponse = CategoryResponse.builder();
 
-        return categoryResponse;
-    }
+        categoryResponse.name( category.getName() );
 
-    @Override
-    public CategoryResponse toCategoryResponse(CategoryDto categoryDto) {
-        if ( categoryDto == null ) {
-            return null;
-        }
-
-        CategoryResponse categoryResponse = new CategoryResponse();
-
-        return categoryResponse;
+        return categoryResponse.build();
     }
 }

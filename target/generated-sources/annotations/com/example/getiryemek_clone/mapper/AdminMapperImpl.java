@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-19T10:00:58+0300",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2024-08-26T10:12:22+0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class AdminMapperImpl implements AdminMapper {
@@ -20,9 +20,14 @@ public class AdminMapperImpl implements AdminMapper {
             return null;
         }
 
-        Admin admin = new Admin();
+        Admin.AdminBuilder admin = Admin.builder();
 
-        return admin;
+        admin.name( adminDto.getName() );
+        admin.surname( adminDto.getSurname() );
+        admin.password( adminDto.getPassword() );
+        admin.email( adminDto.getEmail() );
+
+        return admin.build();
     }
 
     @Override
@@ -32,6 +37,11 @@ public class AdminMapperImpl implements AdminMapper {
         }
 
         AdminDto adminDto = new AdminDto();
+
+        adminDto.setName( admin.getName() );
+        adminDto.setSurname( admin.getSurname() );
+        adminDto.setEmail( admin.getEmail() );
+        adminDto.setPassword( admin.getPassword() );
 
         return adminDto;
     }
@@ -43,6 +53,10 @@ public class AdminMapperImpl implements AdminMapper {
         }
 
         AdminResponse adminResponse = new AdminResponse();
+
+        adminResponse.setName( admin.getName() );
+        adminResponse.setSurname( admin.getSurname() );
+        adminResponse.setEmail( admin.getEmail() );
 
         return adminResponse;
     }

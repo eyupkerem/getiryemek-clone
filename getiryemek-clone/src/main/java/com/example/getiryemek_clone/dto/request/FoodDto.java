@@ -12,11 +12,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FoodDto {
-
     private String name;
     private BigDecimal price;
     private String imageUrl;
     private String ingredients;
-
-
 }

@@ -11,13 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CostumerDto {
     private String name;
-
     private String surname;
-
     private String phoneNumber;
-
     private String email;
-
     private String password;
-
 }

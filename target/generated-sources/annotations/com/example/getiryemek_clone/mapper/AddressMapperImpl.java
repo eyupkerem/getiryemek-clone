@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-19T10:00:59+0300",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2024-08-26T10:12:22+0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class AddressMapperImpl implements AddressMapper {
@@ -20,9 +20,13 @@ public class AddressMapperImpl implements AddressMapper {
             return null;
         }
 
-        Address address = new Address();
+        Address.AddressBuilder address = Address.builder();
 
-        return address;
+        address.street( addressDto.getStreet() );
+        address.city( addressDto.getCity() );
+        address.zipCode( addressDto.getZipCode() );
+
+        return address.build();
     }
 
     @Override
@@ -31,9 +35,13 @@ public class AddressMapperImpl implements AddressMapper {
             return null;
         }
 
-        AddressDto addressDto = new AddressDto();
+        AddressDto.AddressDtoBuilder addressDto = AddressDto.builder();
 
-        return addressDto;
+        addressDto.street( address.getStreet() );
+        addressDto.city( address.getCity() );
+        addressDto.zipCode( address.getZipCode() );
+
+        return addressDto.build();
     }
 
     @Override
@@ -43,6 +51,10 @@ public class AddressMapperImpl implements AddressMapper {
         }
 
         AddressResponse addressResponse = new AddressResponse();
+
+        addressResponse.setStreet( address.getStreet() );
+        addressResponse.setCity( address.getCity() );
+        addressResponse.setZipCode( address.getZipCode() );
 
         return addressResponse;
     }

@@ -10,10 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RestaurantAdminResponse {
     private String name;
-
     private String surname;
-
-    private String password;
-
+    private String email;
     private Restaurant restaurant;
 }

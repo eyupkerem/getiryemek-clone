@@ -2,14 +2,17 @@ package com.example.getiryemek_clone.mapper;
 
 import com.example.getiryemek_clone.dto.request.RestaurantDto;
 import com.example.getiryemek_clone.dto.response.RestaurantResponse;
+import com.example.getiryemek_clone.entity.Food;
 import com.example.getiryemek_clone.entity.Restaurant;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-19T10:00:59+0300",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2024-08-26T10:12:22+0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class RestaurantMapperImpl implements RestaurantMapper {
@@ -22,6 +25,9 @@ public class RestaurantMapperImpl implements RestaurantMapper {
 
         Restaurant restaurant = new Restaurant();
 
+        restaurant.setName( restaurantDto.getName() );
+        restaurant.setPhoneNumber( restaurantDto.getPhoneNumber() );
+
         return restaurant;
     }
 
@@ -31,9 +37,12 @@ public class RestaurantMapperImpl implements RestaurantMapper {
             return null;
         }
 
-        RestaurantDto restaurantDto = new RestaurantDto();
+        RestaurantDto.RestaurantDtoBuilder restaurantDto = RestaurantDto.builder();
 
-        return restaurantDto;
+        restaurantDto.name( restaurant.getName() );
+        restaurantDto.phoneNumber( restaurant.getPhoneNumber() );
+
+        return restaurantDto.build();
     }
 
     @Override
@@ -43,6 +52,14 @@ public class RestaurantMapperImpl implements RestaurantMapper {
         }
 
         RestaurantResponse restaurantResponse = new RestaurantResponse();
+
+        restaurantResponse.setName( restaurant.getName() );
+        restaurantResponse.setAddress( restaurant.getAddress() );
+        restaurantResponse.setPhoneNumber( restaurant.getPhoneNumber() );
+        List<Food> list = restaurant.getFoods();
+        if ( list != null ) {
+            restaurantResponse.setFoods( new ArrayList<Food>( list ) );
+        }
 
         return restaurantResponse;
     }

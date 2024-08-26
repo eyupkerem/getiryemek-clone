@@ -13,5 +13,7 @@ public class RestaurantAdminDto {
     private String name;
     private String surname;
     private String password;
+    private String email;
+
 
 }

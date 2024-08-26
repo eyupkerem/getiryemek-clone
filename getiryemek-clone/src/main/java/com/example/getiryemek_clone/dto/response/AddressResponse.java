@@ -12,9 +12,7 @@ import lombok.NoArgsConstructor;
 public class AddressResponse {
 
     private String street;
-
     private String city;
-
     private String zipCode;
 
 }

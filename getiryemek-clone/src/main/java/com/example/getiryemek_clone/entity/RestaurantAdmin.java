@@ -27,6 +27,9 @@ public class RestaurantAdmin {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String email;
+
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     @JsonManagedReference
@@ -36,5 +39,4 @@ public class RestaurantAdmin {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
-
 }

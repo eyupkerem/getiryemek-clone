@@ -10,11 +10,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class CostumerResponse {
-
     private String name;
     private String surname;
     private String email;
     private String phoneNumber;
     private List<Address> addresses;
-
 }

@@ -13,12 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RestaurantResponse {
-
     private String name;
-
     private Address address;
-
     private String phoneNumber;
-
     private List<Food> foods;
 }

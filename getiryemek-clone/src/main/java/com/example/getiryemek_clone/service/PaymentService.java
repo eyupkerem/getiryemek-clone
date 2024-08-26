@@ -8,6 +8,7 @@ import com.example.getiryemek_clone.entity.enums.PaymentType;
 import com.example.getiryemek_clone.repository.BasketItemRepository;
 import com.example.getiryemek_clone.repository.BasketRepository;
 import com.example.getiryemek_clone.repository.PaymentRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +25,23 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final BasketRepository basketRepository;
     private final BasketItemRepository basketItemRepository;
+    private final JwtService jwtService;
 
-    public ApiResponse<Payment> doPayment(Long costumerId, Long paymentType) {
+    public ApiResponse<Payment> doPayment(HttpServletRequest httpServletRequest, Long paymentType) {
 
-        Basket basket = basketRepository.findByCostumerId(costumerId).orElseThrow(
+        String token = httpServletRequest.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7).trim();
+        } else {
+            throw new RuntimeException("JWT token is missing or invalid");
+        }
+
+        Long id= jwtService.extractId(token);
+
+        Basket basket = basketRepository.findByCostumerId(id).orElseThrow(
                 ()-> new RuntimeException("Basket could not found")
         );
         PaymentType orderPaymentType=findPaymentType(paymentType);
-
 
         List<BasketItem> items = new ArrayList<>(basket.getItems());
         basket.getItems().clear();
@@ -59,7 +69,6 @@ public class PaymentService {
         paymentRepository.save(payment);
 
         return ApiResponse.success("Order paid succesfully" , payment);
-
     }
 
     public PaymentType findPaymentType(Long paymentType) {

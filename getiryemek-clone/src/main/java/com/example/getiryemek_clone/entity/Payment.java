@@ -1,6 +1,5 @@
 package com.example.getiryemek_clone.entity;
 
-import com.example.getiryemek_clone.entity.enums.PaymentStatu;
 import com.example.getiryemek_clone.entity.enums.PaymentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,6 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Column(name = "basket_id")
     private Long basketId;
 
@@ -31,5 +29,4 @@ public class Payment {
 
     @Column(name = "payment_Time")
     private LocalDateTime paymentTime;
-
 }

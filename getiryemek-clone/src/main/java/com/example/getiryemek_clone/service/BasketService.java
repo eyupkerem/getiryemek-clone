@@ -1,12 +1,14 @@
 package com.example.getiryemek_clone.service;
 
 import com.example.getiryemek_clone.dto.response.ApiResponse;
-import com.example.getiryemek_clone.dto.response.BasketResponse;
+import com.example.getiryemek_clone.dto.response.FoodResponse;
 import com.example.getiryemek_clone.entity.*;
+import com.example.getiryemek_clone.mapper.FoodMapper;
 import com.example.getiryemek_clone.repository.BasketItemRepository;
 import com.example.getiryemek_clone.repository.BasketRepository;
 import com.example.getiryemek_clone.repository.CostumerRepository;
 import com.example.getiryemek_clone.repository.FoodRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ public class BasketService {
     private final CostumerRepository costumerRepository;
     private final FoodRepository foodRepository;
     private final BasketItemRepository basketItemRepository;
+    private final FoodMapper foodMapper;
+    private final JwtService jwtService;
 
     public ApiResponse<List<Basket>> getAllBaskets() {
         List<Basket> basketList =  basketRepository.findAll().stream().collect(Collectors.toList());
@@ -37,22 +41,31 @@ public class BasketService {
         return ApiResponse.success("Basket found successfully", basket);
     }
 
-    public ApiResponse<Food> addItemToBasket(Long costumerId , Long foodId){
+    public ApiResponse<FoodResponse> addItemToBasket(HttpServletRequest httpServletRequest, Long foodId){
 
-        System.out.println("Costumer Id :  " + costumerId);
+        String token = httpServletRequest.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7).trim(); // "Bearer " kısmını çıkar ve boşlukları temizle
+        } else {
+            throw new RuntimeException("JWT token is missing or invalid");
+        }
+
+        Long id= jwtService.extractId(token);
+
+        System.out.println("Costumer Id :  " + id);
         System.out.println("Food Id : " + foodId);
 
-        Costumer costumer = costumerRepository.findById(costumerId).orElseThrow(
+        Costumer costumer = costumerRepository.findById(id).orElseThrow(
                 ()-> new RuntimeException("costumer Could not found")
         );
         Food food = foodRepository.findById(foodId).orElseThrow(
                 ()-> new RuntimeException("Food could not found")
         );
 
-        Basket basket = basketRepository.findByCostumerId(costumerId).orElseGet(
+        Basket basket = basketRepository.findByCostumerId(id).orElseGet(
                 ()->{
                     Basket newBasket = new Basket();
-                    newBasket.setCostumerId(costumerId);
+                    newBasket.setCostumerId(id);
                     newBasket.setItems(new ArrayList<>());
                     basketRepository.save(newBasket);
                     return newBasket;
@@ -87,7 +100,7 @@ public class BasketService {
 
         updateBasketTotalAmount(basket);
 
-        return ApiResponse.success("Food added succesfully" , food);
+        return ApiResponse.success("Food added succesfully" , foodMapper.toFoodResponse(food));
 
     }
 
@@ -103,37 +116,47 @@ public class BasketService {
 
 
     @Transactional
-    public ApiResponse<Food> deleteItemFromBasket(Long costumerId , Long foodId){
+    public ApiResponse<FoodResponse> deleteItemFromBasket(HttpServletRequest httpServletRequest , Long foodId){
 
-        Costumer costumer = costumerRepository.findById(costumerId).orElseThrow(
+        String token = httpServletRequest.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7).trim();
+        } else {
+            throw new RuntimeException("JWT token is missing or invalid");
+        }
+
+        Long id= jwtService.extractId(token);
+
+        Costumer costumer = costumerRepository.findById(id).orElseThrow(
                 ()-> new RuntimeException("costumer Could not found")
         );
         Food food = foodRepository.findById(foodId).orElseThrow(
                 ()-> new RuntimeException("Food could not found")
         );
 
-        Basket basket = basketRepository.findByCostumerId(costumerId).orElseThrow(
+        Basket basket = basketRepository.findByCostumerId(id).orElseThrow(
                 ()-> new RuntimeException("Basket could not found")
         );
 
-        Long basketId= basket.getId();
 
+
+        Long basketId= basket.getId();
 
        BasketItem deletedItem =  basketItemRepository.findByBasketIdAndFoodId(basketId , foodId).orElseThrow(
                ()-> new RuntimeException("Item could not found"));
 
-        basketItemRepository.delete(deletedItem);
+       int basketItemQuantity = deletedItem.getQuantity();
 
-        if (basketItemRepository.findByBasketIdAndFoodId(basketId, foodId).isPresent()) {
-            System.out.println("Item still exists in database after delete.");
-        }
+       if (basketItemQuantity == 1 ){
+           basketItemRepository.delete(deletedItem);
+       } else {
+           deletedItem.setQuantity(basketItemQuantity - 1 );
+           basketItemRepository.save(deletedItem);
+       }
 
         updateBasketTotalAmount(basket);
 
-        return ApiResponse.success("Item deleted" , deletedItem.getFood());
+        return ApiResponse.success("Item deleted" , foodMapper.toFoodResponse(deletedItem.getFood()));
 
     }
-
-
-
 }

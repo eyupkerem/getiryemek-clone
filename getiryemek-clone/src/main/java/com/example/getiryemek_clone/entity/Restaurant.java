@@ -32,6 +32,4 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant")
     @JsonBackReference
     private List<RestaurantAdmin> admins;
-
-
 }

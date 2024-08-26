@@ -6,10 +6,11 @@ import com.example.getiryemek_clone.entity.Costumer;
 import com.example.getiryemek_clone.entity.Restaurant;
 import com.example.getiryemek_clone.entity.update.AddressUpdateDto;
 import com.example.getiryemek_clone.mapper.AddressMapper;
-import com.example.getiryemek_clone.mapper.CostumerMapper;
 import com.example.getiryemek_clone.repository.AddressRepository;
 import com.example.getiryemek_clone.dto.request.AddressDto;
 import com.example.getiryemek_clone.dto.response.ApiResponse;
+import com.example.getiryemek_clone.repository.CostumerRepository;
+import com.example.getiryemek_clone.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,36 +23,35 @@ public class AddressService {
 
     private final AddressRepository addressRepository;
     private final AddressMapper addressMapper;
-    private final CostumerService costumerService;
-    private final RestaurantService restaurantService;
+    private final CostumerRepository costumerRepository;
+    private final RestaurantRepository restaurantRepository;
 
-    public ApiResponse<List<Address>> getAllAddress() {
-        List<Address> addressesList = addressRepository.findAll()
-                .stream().collect(Collectors.toList());
-        return ApiResponse.success("address List founded" , addressesList);
+    public ApiResponse<List<AddressResponse>> getAllAddress() {
+        List<AddressResponse> addressesList = addressRepository.findAll()
+                .stream()
+                .map(x -> addressMapper.toAddressResponse(x))
+                .collect(Collectors.toList());
+        return ApiResponse.success("address List founded" ,  addressesList);
     }
 
-    public ApiResponse<Address> findById(Long addressId) {
-
+    public ApiResponse<AddressResponse> findById(Long addressId) {
         return addressRepository.findById(addressId)
                 .map(address ->
-                        ApiResponse.success("Address founded succesfully " , address))
+                        ApiResponse.success("Address founded succesfully " , addressMapper.toAddressResponse(address)))
                 .orElseGet(()->ApiResponse.failure("Address  could not found"));
     }
-
-
 
     public ApiResponse<AddressResponse> add(Long costumerId, Long restaurantId, AddressDto addressDto) {
         Address newAddress = addressMapper.toAddress(addressDto);
 
         if (costumerId != null) {
-            Costumer costumer = costumerService.findById(costumerId).getData();
+            Costumer costumer = costumerRepository.findById(costumerId).get();
             if (costumer == null) {
                 return ApiResponse.failure("Costumer not found");
             }
             newAddress.setCostumer(costumer);
         } else if (restaurantId != null) {
-            Restaurant restaurant = restaurantService.findById(restaurantId).getData();
+            Restaurant restaurant = restaurantRepository.findById(restaurantId).get();
             if (restaurant == null) {
                 return ApiResponse.failure("Restaurant not found");
             }
@@ -65,12 +65,12 @@ public class AddressService {
     }
 
 
-    public ApiResponse<Address> deleteAddress(Long addressId) {
-
+    public ApiResponse<AddressResponse> deleteAddress(Long addressId) {
         return addressRepository.findById(addressId)
                 .map(address -> {
                     addressRepository.deleteById(addressId);
-                    return ApiResponse.success("Address deleted successfully", address);
+                    return ApiResponse.success("Address deleted successfully",
+                            addressMapper.toAddressResponse(address));
                 })
                 .orElseGet(() ->
                         ApiResponse.failure("Address could not be found")
@@ -78,7 +78,7 @@ public class AddressService {
     }
 
 
-    public ApiResponse<Address> update(Long addressId, AddressUpdateDto updateDto) {
+    public ApiResponse<AddressResponse> update(Long addressId, AddressUpdateDto updateDto) {
 
         if (updateDto.getCity().isEmpty() ||
                 updateDto.getStreet().isEmpty() ||
@@ -92,9 +92,9 @@ public class AddressService {
                     address.setStreet(updateDto.getStreet());
                     address.setCity(updateDto.getCity());
                     address.setZipCode(updateDto.getZipCode());
-                    return ApiResponse.success("Address updated succesfully", address);
+                    return ApiResponse.success("Address updated successfully",
+                            addressMapper.toAddressResponse(address));
                 })
-                .orElseGet(() -> ApiResponse.failure("Addres could not updated"));
+                .orElseGet(() -> ApiResponse.failure("Address could not updated"));
     }
-
 }
