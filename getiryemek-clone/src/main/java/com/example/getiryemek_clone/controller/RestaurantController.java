@@ -24,7 +24,7 @@ import java.util.List;
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
-    @PreAuthorize("hasAnyRole('USER' , 'ADMIN' , 'RESTAURANT_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER' , 'ADMIN' , 'RESTAURANT_ADMIN')")
     @GetMapping
     public ResponseEntity<ApiResponse> getAllRestaurants(){
         ApiResponse<List<RestaurantResponse>> response = restaurantService.getAllRestaurants();
@@ -32,7 +32,7 @@ public class RestaurantController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PreAuthorize("hasAnyRole('USER' , 'ADMIN' , 'RESTAURANT_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER' , 'ADMIN' , 'RESTAURANT_ADMIN')")
     @GetMapping("/{restaurantId}")
     public ResponseEntity<ApiResponse> getRestaurantById(@PathVariable Long restaurantId){
         ApiResponse<RestaurantResponse> response = restaurantService.findById(restaurantId);
@@ -40,7 +40,7 @@ public class RestaurantController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PreAuthorize("hasAnyRole('USER' , 'ADMIN' , 'RESTAURANT_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER' , 'ADMIN' , 'RESTAURANT_ADMIN')")
     @GetMapping("/{restaurantName}")
     public ResponseEntity<ApiResponse> getRestaurantByName(@PathVariable String restaurantName){
         ApiResponse<RestaurantResponse> response = restaurantService.findByName(restaurantName);
@@ -48,7 +48,7 @@ public class RestaurantController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<ApiResponse> add(@RequestParam(required = false) Long addressId,
                                            @RequestBody RestaurantDto restaurantDto){
@@ -57,7 +57,7 @@ public class RestaurantController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN' , 'RESTAURANT_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN' , 'RESTAURANT_ADMIN')")
     @PutMapping("/{addressId}")
     public ResponseEntity<ApiResponse> update(HttpServletRequest httpServletRequest
             , @RequestBody RestaurantUpdateDto updateDto
@@ -67,7 +67,7 @@ public class RestaurantController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteById(@PathVariable Long id){
         ApiResponse<RestaurantResponse> response = restaurantService.deleteRestaurant(id);

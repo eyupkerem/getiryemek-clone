@@ -48,6 +48,14 @@ public class AdminService {
     }
 
     public ApiResponse<AdminResponse> add(AdminDto adminDto) {
+        if (!adminDto.getEmail().matches("^[a-zA-Z0-9._%+-]+@gmail\\.com$")) {
+            return ApiResponse.failure("Email must be a valid Gmail address");
+        }
+        boolean emailExists = adminRepository.findByEmail(adminDto.getEmail()).isPresent();
+        if(emailExists){
+            return ApiResponse.failure("Email already in use");
+        }
+
         Admin newAdmin = adminMapper.toAdmin(adminDto);
         String hashedPassword = passwordEncoder.hashPassword(adminDto.getPassword());
         newAdmin.setPassword(hashedPassword);

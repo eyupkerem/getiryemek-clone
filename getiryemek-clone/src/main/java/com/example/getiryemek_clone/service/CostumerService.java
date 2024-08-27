@@ -55,9 +55,11 @@ public class CostumerService {
     }
 
     public ApiResponse<CostumerResponse> add(CostumerDto costumerDto) {
+        if (!costumerDto.getEmail().matches("^[a-zA-Z0-9._%+-]+@gmail\\.com$")) {
+            return ApiResponse.failure("Email must be a valid Gmail address");
+        }
         boolean emailExists = costumerRepository.findByEmail(costumerDto.getEmail()).isPresent();
         boolean phoneNumberExists = costumerRepository.findByPhoneNumber(costumerDto.getPhoneNumber()).isPresent();
-
         if(emailExists || phoneNumberExists){
             return ApiResponse.failure("Phone number or email already in use");
         }

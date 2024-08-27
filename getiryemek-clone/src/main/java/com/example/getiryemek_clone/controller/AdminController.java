@@ -45,7 +45,6 @@ public class AdminController {
         ApiResponse<String> response=adminService.generateToken(request);
         return response.isSuccess()? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

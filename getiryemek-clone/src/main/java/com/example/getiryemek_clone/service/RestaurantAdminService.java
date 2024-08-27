@@ -1,7 +1,6 @@
 package com.example.getiryemek_clone.service;
 
 import com.example.getiryemek_clone.config.PasswordEncoderConfig;
-import com.example.getiryemek_clone.dto.request.AuthRequest;
 import com.example.getiryemek_clone.dto.response.RestaurantAdminResponse;
 import com.example.getiryemek_clone.entity.Restaurant;
 import com.example.getiryemek_clone.entity.RestaurantAdmin;
@@ -14,13 +13,8 @@ import com.example.getiryemek_clone.dto.response.ApiResponse;
 import com.example.getiryemek_clone.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +48,16 @@ public class RestaurantAdminService {
 
 
     public ApiResponse<RestaurantAdminResponse> add(RestaurantAdminDto restaurantAdminDto, Long restaurantId) {
+
+        if (!restaurantAdminDto.getEmail().matches("^[a-zA-Z0-9._%+-]+@gmail\\.com$")) {
+            return ApiResponse.failure("Email must be a valid Gmail address");
+        }
+        boolean emailExists = restaurantAdminRepository.findByEmail(restaurantAdminDto.getEmail()).isPresent();
+        if(emailExists){
+            return ApiResponse.failure("Email already in use");
+        }
+
+
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
                 () -> new RuntimeException("Restaurant could not found")
