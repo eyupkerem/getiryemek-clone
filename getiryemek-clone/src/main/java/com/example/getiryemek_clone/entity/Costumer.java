@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class Costumer {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "costumer")
+    @OneToMany(mappedBy = "costumer" , cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Address> addresses;
 
     @Enumerated(EnumType.STRING)

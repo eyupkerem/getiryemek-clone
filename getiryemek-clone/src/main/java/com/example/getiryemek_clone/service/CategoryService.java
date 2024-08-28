@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final FoodRepository foodRepository;
     private final CategoryMapper categoryMapper;
 
     public ApiResponse<List<CategoryResponse>> getAllCategories() {

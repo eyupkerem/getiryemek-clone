@@ -12,6 +12,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class JwtService {
     private final AdminRepository adminRepository;
     private final CostumerRepository costumerRepository;
@@ -32,6 +34,7 @@ public class JwtService {
     public String generateAdminToken(String email){
         Map<String , Object> claims = new HashMap<>();
         Admin  admin =adminRepository.findByEmail(email).orElse(null);
+        log.error("ADMİN" +  admin.toString());
         claims.put("role" , Role.ADMIN);
         claims.put("id" , admin.getId());
         return createToken(claims  , email);

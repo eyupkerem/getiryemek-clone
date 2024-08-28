@@ -26,10 +26,10 @@ public class Restaurant {
     @Column(name = "phone_number",nullable = false)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant" , cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Food> foods;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant" , cascade = CascadeType.ALL , orphanRemoval = true)
     @JsonBackReference
     private List<RestaurantAdmin> admins;
 }

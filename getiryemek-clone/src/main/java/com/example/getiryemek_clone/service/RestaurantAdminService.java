@@ -1,6 +1,7 @@
 package com.example.getiryemek_clone.service;
 
 import com.example.getiryemek_clone.config.PasswordEncoderConfig;
+import com.example.getiryemek_clone.dto.request.AuthRequest;
 import com.example.getiryemek_clone.dto.response.RestaurantAdminResponse;
 import com.example.getiryemek_clone.entity.Restaurant;
 import com.example.getiryemek_clone.entity.RestaurantAdmin;
@@ -14,6 +15,9 @@ import com.example.getiryemek_clone.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +31,8 @@ public class RestaurantAdminService {
     private final RestaurantAdminMapper restaurantAdminMapper;
     private final RestaurantRepository restaurantRepository;
     private final PasswordEncoderConfig passwordEncoderConfig;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     public ApiResponse<List<RestaurantAdminResponse>> getAllAdmins() {
         List<RestaurantAdminResponse> adminList = restaurantAdminRepository.findAll()
@@ -69,10 +75,26 @@ public class RestaurantAdminService {
         String hashedPassword = passwordEncoderConfig.hashPassword(restaurantAdminDto.getPassword());
         newAdmin.setPassword(hashedPassword);
         restaurantAdminRepository.save(newAdmin);
-        return ApiResponse.success("Admin added succesfully"
+        return ApiResponse.success("Admin added successfully"
                 , restaurantAdminMapper.toRestaurantAdminResponse(newAdmin));
     }
 
+    public ApiResponse<String> generateToken(AuthRequest request) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
+            );
+            if (authentication.isAuthenticated()) {
+                String token = jwtService.generateRestaurantAdminToken(request.email());
+                return ApiResponse.success("Token generated successfully", token);
+            } else {
+                return ApiResponse.failure("Invalid credentials");
+            }
+        } catch (Exception e) {
+            log.error("Authentication failed: ", e);
+            return ApiResponse.failure("Authentication failed");
+        }
+    }
 
     public ApiResponse<RestaurantAdminResponse> update(Long id, RestaurantAdminUpdateDto updateDto) {
 
@@ -87,10 +109,10 @@ public class RestaurantAdminService {
                     restaurantAdmin.setSurname(updateDto.getSurname());
                     restaurantAdmin.setPassword(updateDto.getPassword());
                     restaurantAdminRepository.save(restaurantAdmin);
-                    return ApiResponse.success("Restaurant admin update succesfıully"
+                    return ApiResponse.success("Restaurant admin update successfully"
                             , restaurantAdminMapper.toRestaurantAdminResponse(restaurantAdmin));
                 })
-                .orElseGet(() -> ApiResponse.failure("Restuarant admin could not update"));
+                .orElseGet(() -> ApiResponse.failure("Restaurant admin could not update"));
     }
 
     public ApiResponse<RestaurantAdminResponse> deleteRestaurantAdmin(Long id) {
@@ -100,6 +122,6 @@ public class RestaurantAdminService {
                     return ApiResponse.success("Restaurant Admin deleted succersfully"
                             , restaurantAdminMapper.toRestaurantAdminResponse(restaurantAdmin));
                 })
-                .orElseGet(() -> ApiResponse.failure("REstaurant admin could not deleted"));
+                .orElseGet(() -> ApiResponse.failure("Restaurant admin could not deleted"));
     }
 }

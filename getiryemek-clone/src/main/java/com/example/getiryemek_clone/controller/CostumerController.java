@@ -6,16 +6,13 @@ import com.example.getiryemek_clone.dto.request.CostumerDto;
 import com.example.getiryemek_clone.dto.response.ApiResponse;
 import com.example.getiryemek_clone.entity.update.CostumerUpdateDto;
 import com.example.getiryemek_clone.service.CostumerService;
-import com.example.getiryemek_clone.service.JwtService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +24,6 @@ import java.util.List;
 @Slf4j
 public class CostumerController {
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
     private final CostumerService costumerService;
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -48,20 +43,10 @@ public class CostumerController {
     }
 
     @PostMapping("/generateToken")
-    public ResponseEntity<String> generateToken(@RequestBody AuthRequest request) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
-            );
-            if (authentication.isAuthenticated()) {
-                return ResponseEntity.ok(jwtService.generateCostumerToken(request.email()));
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-            }
-        } catch (Exception e) {
-            log.error("Authentication failed: ", e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
-        }
+    public ResponseEntity<ApiResponse> generateToken(@RequestBody AuthRequest request) {
+        ApiResponse<String> response=costumerService.generateToken(request);
+        return response.isSuccess()? ResponseEntity.ok(response)
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -71,8 +56,6 @@ public class CostumerController {
         return response.isSuccess()? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-
-
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{email}")

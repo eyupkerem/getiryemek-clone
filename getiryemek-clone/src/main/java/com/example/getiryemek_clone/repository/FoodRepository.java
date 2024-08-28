@@ -6,14 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface FoodRepository extends JpaRepository<Food,Long> {
-    Optional<Food> findByName(String foodName);
+    List<Food> findByName(String foodName);
+
     List<Food> findByCategoryId(Long categoryId);
+
+    List<Food> findByRestaurantIdAndCategoryId(Long restaurantId, Long categoryId);
+
     @Query("SELECT f FROM Food f WHERE f.restaurant.id = :restaurantId")
     List<Food> getFoodFromRestaurant(@Param("restaurantId") Long restaurantId);
-
-    @Query("SELECT f FROM Food f WHERE f.restaurant.id = :restaurantId AND f.category.id = :categoryId")
-    List<Food> getFoodByRestaurantAndCategory(@Param("restaurantId") Long restaurantId, @Param("categoryId") Long categoryId);
 }

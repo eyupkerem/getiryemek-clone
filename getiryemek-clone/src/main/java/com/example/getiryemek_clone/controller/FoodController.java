@@ -29,66 +29,61 @@ public class FoodController {
         return response.isSuccess() ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-
     @PreAuthorize("hasAnyAuthority('RESTAURANT_ADMIN' , 'ADMIN')")
     @GetMapping("/{foodId}")
     public ResponseEntity<ApiResponse> getFoodById(@PathVariable Long foodId){
-
         ApiResponse<FoodResponse> response = foodService.findFoodById(foodId);
-        return response.isSuccess()? ResponseEntity.ok(response)
+        return response.isSuccess() ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-
     @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
-    @GetMapping("/byRestaurant")
-    public ResponseEntity<ApiResponse> getFoodsFromRestaurant(@RequestParam Long restaurantId){
+    @GetMapping("/byRestaurant/{restaurantId}")
+    public ResponseEntity<ApiResponse> getFoodsFromRestaurant(@PathVariable Long restaurantId){
         ApiResponse<List<FoodResponse>> response = foodService.getFoodFromRestaurant(restaurantId);
-        return response.isSuccess()? ResponseEntity.ok(response)
+        return response.isSuccess() ? ResponseEntity.ok(response)
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+    @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
+    @GetMapping("/byCategory/{categoryId}")
+    public ResponseEntity<ApiResponse> getFoodsByCategory(@PathVariable Long categoryId){
+        ApiResponse<List<FoodResponse>> response = foodService.getFoodByCategory(categoryId);
+        return response.isSuccess() ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
-    @GetMapping("/{foodName}")
+    @GetMapping("/name/{foodName}")
     public ResponseEntity<ApiResponse> getFoodByName(@PathVariable String foodName){
-            ApiResponse<FoodResponse> response = foodService.findFoodByName(foodName);
-            return response.isSuccess()? ResponseEntity.ok(response)
+        ApiResponse<List<FoodResponse>> response = foodService.findFoodByName(foodName);
+        return response.isSuccess() ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
-    @GetMapping("/byCategory/{id}")
-    public ResponseEntity<ApiResponse> getFoodListByCategoryId(@PathVariable Long id){
-        ApiResponse<List<FoodResponse>> response = foodService.getFoodByCategory(id);
-        return response.isSuccess()? ResponseEntity.ok(response)
-                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
-
-    @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
-    @GetMapping("/byRestaurantAndCategory")
-    public ResponseEntity<ApiResponse> foodWithRestaurantAndCategory(
-            @RequestParam Long restaurantId,
-            @RequestParam Long categoryId){
-        ApiResponse<List<FoodResponse>>  response = foodService
-                .foodWithCategoryAndRestaurant(restaurantId,categoryId);
-        return response.isSuccess()? ResponseEntity.ok(response)
+    @GetMapping("/byRestaurantAndCategory/{restaurantId}/category/{categoryId}")
+    public ResponseEntity<ApiResponse> byRestaurantAndCategory(@PathVariable Long restaurantId
+            , @PathVariable Long categoryId){
+        ApiResponse<List<FoodResponse>> response = foodService
+                .foodWithCategoryAndRestaurant(restaurantId, categoryId);
+        return response.isSuccess() ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @PreAuthorize("hasAnyAuthority('RESTAURANT_ADMIN' , 'ADMIN')")
     @PostMapping
-    public ResponseEntity<ApiResponse> addFood(@RequestBody FoodDto foodDto ,
-                                               @RequestParam Long categoryId ,
+    public ResponseEntity<ApiResponse> addFood(@RequestBody FoodDto foodDto,
+                                               @RequestParam Long categoryId,
                                                @RequestParam Long restaurantId){
-        ApiResponse<FoodResponse> response = foodService.add(foodDto , categoryId , restaurantId);
-        return response.isSuccess()? ResponseEntity.ok(response)
+        ApiResponse<FoodResponse> response = foodService.add(foodDto, categoryId, restaurantId);
+        return response.isSuccess() ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @PreAuthorize("hasAnyAuthority('RESTAURANT_ADMIN' , 'ADMIN')")
     @PutMapping("/{foodId}")
-    public ResponseEntity<ApiResponse> updateFood(@PathVariable Long foodId , @RequestBody FoodUpdateDto updateDto){
-        ApiResponse<FoodResponse> response=foodService.update(foodId , updateDto);
-        return response.isSuccess()? ResponseEntity.ok(response)
+    public ResponseEntity<ApiResponse> updateFood(@PathVariable Long foodId, @RequestBody FoodUpdateDto updateDto){
+        ApiResponse<FoodResponse> response = foodService.update(foodId, updateDto);
+        return response.isSuccess() ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
@@ -96,7 +91,7 @@ public class FoodController {
     @DeleteMapping("/{foodId}")
     public ResponseEntity<ApiResponse> deleteFood(@PathVariable Long foodId){
         ApiResponse<FoodResponse> response = foodService.deleteFood(foodId);
-        return response.isSuccess()? ResponseEntity.ok(response)
+        return response.isSuccess() ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 

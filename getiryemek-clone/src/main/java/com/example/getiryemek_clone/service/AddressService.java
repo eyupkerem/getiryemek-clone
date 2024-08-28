@@ -46,15 +46,9 @@ public class AddressService {
 
         if (costumerId != null) {
             Costumer costumer = costumerRepository.findById(costumerId).get();
-            if (costumer == null) {
-                return ApiResponse.failure("Costumer not found");
-            }
             newAddress.setCostumer(costumer);
         } else if (restaurantId != null) {
             Restaurant restaurant = restaurantRepository.findById(restaurantId).get();
-            if (restaurant == null) {
-                return ApiResponse.failure("Restaurant not found");
-            }
             newAddress.setRestaurant(restaurant);
         } else {
             return ApiResponse.failure("Either costumerId or restaurantId must be provided");
@@ -80,10 +74,10 @@ public class AddressService {
 
     public ApiResponse<AddressResponse> update(Long addressId, AddressUpdateDto updateDto) {
 
-        if (updateDto.getCity().isEmpty() ||
-                updateDto.getStreet().isEmpty() ||
-                updateDto.getZipCode().isEmpty()
-        ){
+        if (updateDto.getCity() == null || updateDto.getCity().isEmpty() ||
+                updateDto.getStreet() == null || updateDto.getStreet().isEmpty() ||
+                updateDto.getZipCode() == null || updateDto.getZipCode().isEmpty() ||
+                updateDto.getNumber() <0) {
             return ApiResponse.failure("All fields must be non-empty");
         }
 

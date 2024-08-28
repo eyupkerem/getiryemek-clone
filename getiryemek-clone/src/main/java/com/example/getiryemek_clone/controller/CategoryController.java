@@ -40,7 +40,7 @@ public class CategoryController {
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
-    @GetMapping("/{categoryName}")
+    @GetMapping("byName/{categoryName}")
     public ResponseEntity<ApiResponse> getCategoryByName(@PathVariable String categoryName){
         ApiResponse<CategoryResponse> response = categoryService.findByName(categoryName);
         return response.isSuccess()? ResponseEntity.ok(response)

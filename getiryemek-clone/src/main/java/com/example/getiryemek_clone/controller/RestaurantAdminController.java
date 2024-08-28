@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,20 +64,10 @@ public class RestaurantAdminController {
     }
 
     @PostMapping("/generateToken")
-    public ResponseEntity<String> generateToken(@RequestBody AuthRequest request) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
-            );
-            if (authentication.isAuthenticated()) {
-                return ResponseEntity.ok(jwtService.generateRestaurantAdminToken(request.email()));
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-            }
-        } catch (Exception e) {
-            log.error("Authentication failed: ", e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
-        }
+    public ResponseEntity<ApiResponse> generateToken(@RequestBody AuthRequest request) {
+        ApiResponse<String> response=restaurantAdminService.generateToken(request);
+        return response.isSuccess()? ResponseEntity.ok(response)
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

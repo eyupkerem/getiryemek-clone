@@ -1,6 +1,7 @@
 package com.example.getiryemek_clone.service;
 
 import com.example.getiryemek_clone.config.PasswordEncoderConfig;
+import com.example.getiryemek_clone.dto.request.AuthRequest;
 import com.example.getiryemek_clone.dto.response.CostumerResponse;
 import com.example.getiryemek_clone.entity.Costumer;
 import com.example.getiryemek_clone.entity.update.CostumerUpdateDto;
@@ -9,6 +10,10 @@ import com.example.getiryemek_clone.repository.CostumerRepository;
 import com.example.getiryemek_clone.dto.request.CostumerDto;
 import com.example.getiryemek_clone.dto.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +24,13 @@ import static com.example.getiryemek_clone.entity.enums.Role.USER;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CostumerService {
     private final CostumerRepository costumerRepository;
     private final CostumerMapper costumerMapper;
     private final PasswordEncoderConfig passwordEncoderConfig;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     public ApiResponse<List<CostumerResponse>> getAllCostumers() {
         List<CostumerResponse> costumerList = costumerRepository.findAll()
@@ -85,29 +93,6 @@ public class CostumerService {
     }
 
     public ApiResponse<CostumerResponse> update(Long costumerId, CostumerUpdateDto updateDto) {
-
-       /* if (updateDto.getName().isEmpty() ||
-                updateDto.getSurname().isEmpty() ||
-                updateDto.getPhoneNumber().isEmpty() ||
-                updateDto.getEmail().isEmpty() ||
-                updateDto.getPassword().isEmpty()) {
-            return ApiResponse.failure("All fields must be non-empty");
-        }
-
-        return costumerRepository.findById(costumerId)
-                .map(costumer -> {
-                    costumer.setName(updateDto.getName());
-                    costumer.setSurname(updateDto.getSurname());
-                    costumer.setPhoneNumber(updateDto.getPhoneNumber());
-                    costumer.setEmail(updateDto.getEmail());
-                    costumer.setPassword(updateDto.getPassword());
-
-                    return ApiResponse.success("Costumer updated succesfully "
-                            , costumerMapper.toCostumerResponse(costumer));
-                })
-                .orElseGet(()-> ApiResponse.failure("Costumer could not updated"));
-    */
-
         Costumer costumer = costumerRepository.findById(costumerId).orElse(null);
         if (costumer==null){
             return ApiResponse.failure("COSTUMER_NOT_FOUND");
@@ -116,7 +101,6 @@ public class CostumerService {
         if(updateDto.getSurname()!=null){
             costumer.setSurname(updateDto.getSurname());
         }
-
         if(updateDto.getName()!=null){
             costumer.setName(updateDto.getName());
         }
@@ -129,7 +113,26 @@ public class CostumerService {
         if (updateDto.getPassword() !=null){
             costumer.setPassword(passwordEncoderConfig.hashPassword(updateDto.getPassword()));
         }
+        costumerRepository.save(costumer);
         return ApiResponse.success("COSTUMER UPDATED SUCCESSFULLY" , costumerMapper.toCostumerResponse(costumer));
+    }
+
+    public ApiResponse<String> generateToken(AuthRequest request) {
+
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
+            );
+            if (authentication.isAuthenticated()) {
+                String token = jwtService.generateCostumerToken(request.email());
+                return ApiResponse.success("Costumer token generated successfully" , token);
+            } else {
+                return ApiResponse.failure("Invalid credentials");
+            }
+        } catch (Exception e) {
+            log.error("Authentication failed: ", e);
+            return ApiResponse.failure("Authentication failed");
+        }
     }
 }
 

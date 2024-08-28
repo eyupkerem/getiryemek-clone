@@ -15,6 +15,8 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private int number;
+
     private String street;
 
     @Column(name = "city",nullable = false)

@@ -40,10 +40,17 @@ public class FoodService {
                 .orElseGet(() -> ApiResponse.failure("Food could not found"));
     }
 
-    public ApiResponse<FoodResponse> findFoodByName(String foodName){
-        return foodRepository.findByName(foodName)
-                .map(food -> ApiResponse.success("Food founded",  foodMapper.toFoodResponse(food)))
-                .orElseGet(() -> ApiResponse.failure("Food could not found"));
+    public ApiResponse<List<FoodResponse>> findFoodByName(String foodName) {
+        List<FoodResponse> foodList = foodRepository.findByName(foodName)
+                .stream()
+                .map(food -> foodMapper.toFoodResponse(food))
+                .collect(Collectors.toList());
+
+        if (foodList.isEmpty()) {
+            return ApiResponse.failure("No food found with the given name");
+        }
+
+        return ApiResponse.success("Food(s) found", foodList);
     }
 
     public ApiResponse<FoodResponse>  add(FoodDto foodDto , Long categoryId , Long restaurantId) {
@@ -83,7 +90,6 @@ public class FoodService {
                             tempFood.setPrice(updateDto.getPrice());
                             tempFood.setImageUrl(updateDto.getImageURL());
                             tempFood.setIngredients(updateDto.getIngredients());
-                            //update Category
                             foodRepository.save(tempFood);
                             return ApiResponse.success("Food updated succesfully",
                                     foodMapper.toFoodResponse(tempFood));
@@ -96,7 +102,7 @@ public class FoodService {
                 .stream()
                 .map(food -> foodMapper.toFoodResponse(food))
                 .collect(Collectors.toList());
-        return ApiResponse.success(" Food List founded from Restaurant ",foodList);
+        return ApiResponse.success(" Food List founded  ",foodList);
     }
 
     public ApiResponse<List<FoodResponse>> getFoodByCategory(Long categoryId) {
@@ -113,12 +119,13 @@ public class FoodService {
     }
 
     public ApiResponse<List<FoodResponse>> foodWithCategoryAndRestaurant(Long restaurantId, Long categoryId) {
-        List<FoodResponse> foodList = foodRepository.findByCategoryId(categoryId)
+        List<FoodResponse> foodList = foodRepository.findByRestaurantIdAndCategoryId(restaurantId, categoryId)
                 .stream()
                 .map(food -> foodMapper.toFoodResponse(food))
                 .collect(Collectors.toList());
+
         if (foodList.isEmpty()) {
-            return ApiResponse.failure("Food list cannot be found");
+            return ApiResponse.failure("Food list cannot be found for the given restaurant and category");
         }
         return ApiResponse.success("Food list found", foodList);
     }

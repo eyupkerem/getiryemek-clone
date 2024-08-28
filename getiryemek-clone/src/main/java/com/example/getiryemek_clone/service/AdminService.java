@@ -9,12 +9,9 @@ import com.example.getiryemek_clone.repository.AdminRepository;
 import com.example.getiryemek_clone.dto.request.AdminDto;
 import com.example.getiryemek_clone.dto.response.ApiResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

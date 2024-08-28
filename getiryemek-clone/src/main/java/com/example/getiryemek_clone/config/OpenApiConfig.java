@@ -21,9 +21,9 @@ public class OpenApiConfig {
                 .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(new Components().addSecuritySchemes("Bearer Authentication", createAPIKeySchema()))
                 .info(new Info()
-                        .title("Trendyol")
+                        .title("GetirYemekClone")
                         .version("2.4.0")
-                        .description("Trendyol API requests"));
+                        .description("GetirYemekClone API requests"));
     }
 
     private SecurityScheme createAPIKeySchema() {
