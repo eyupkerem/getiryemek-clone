@@ -30,7 +30,7 @@ public class BasketController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
     @GetMapping("/{basketId}")
-    public ResponseEntity<ApiResponse<Basket>> getAllBaskets(@PathVariable Long basketId) {
+    public ResponseEntity<ApiResponse<Basket>> getBasketById(@PathVariable Long basketId) {
         ApiResponse<Basket> response = basketService.getById(basketId);
         return response.isSuccess()
                 ? ResponseEntity.ok(response)

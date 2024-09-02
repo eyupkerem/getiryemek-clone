@@ -40,7 +40,7 @@ public class AdminController {
         : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PostMapping("/generateToken")
+    @PostMapping("/login")
     public ResponseEntity<ApiResponse> generateToken(@RequestBody AuthRequest request){
         ApiResponse<String> response=adminService.generateToken(request);
         return response.isSuccess()? ResponseEntity.ok(response)

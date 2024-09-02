@@ -81,7 +81,8 @@ public class FoodController {
 
     @PreAuthorize("hasAnyAuthority('RESTAURANT_ADMIN' , 'ADMIN')")
     @PutMapping("/{foodId}")
-    public ResponseEntity<ApiResponse> updateFood(@PathVariable Long foodId, @RequestBody FoodUpdateDto updateDto){
+    public ResponseEntity<ApiResponse> updateFood(@PathVariable Long foodId
+            , @RequestBody FoodUpdateDto updateDto){
         ApiResponse<FoodResponse> response = foodService.update(foodId, updateDto);
         return response.isSuccess() ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

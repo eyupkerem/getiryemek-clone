@@ -42,7 +42,7 @@ public class CostumerController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PostMapping("/generateToken")
+    @PostMapping("/login")
     public ResponseEntity<ApiResponse> generateToken(@RequestBody AuthRequest request) {
         ApiResponse<String> response=costumerService.generateToken(request);
         return response.isSuccess()? ResponseEntity.ok(response)

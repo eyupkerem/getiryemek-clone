@@ -31,9 +31,9 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer:: disable)
                 .authorizeHttpRequests( x->
-                        x.requestMatchers("/api/admin/generateToken").permitAll()
-                                .requestMatchers("/api/costumer/generateToken").permitAll()
-                                .requestMatchers("/api/restaurant-admin/generateToken").permitAll()
+                        x.requestMatchers("/api/admin/login").permitAll()
+                                .requestMatchers("/api/costumer/login").permitAll()
+                                .requestMatchers("/api/restaurant-admin/login").permitAll()
                                 .requestMatchers("/swagger-ui/index.html#/").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated()

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-28T10:31:43+0300",
+    date = "2024-09-02T16:10:35+0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -28,22 +28,6 @@ public class AddressMapperImpl implements AddressMapper {
         address.zipCode( addressDto.getZipCode() );
 
         return address.build();
-    }
-
-    @Override
-    public AddressDto toAddressDto(Address address) {
-        if ( address == null ) {
-            return null;
-        }
-
-        AddressDto.AddressDtoBuilder addressDto = AddressDto.builder();
-
-        addressDto.number( address.getNumber() );
-        addressDto.street( address.getStreet() );
-        addressDto.city( address.getCity() );
-        addressDto.zipCode( address.getZipCode() );
-
-        return addressDto.build();
     }
 
     @Override

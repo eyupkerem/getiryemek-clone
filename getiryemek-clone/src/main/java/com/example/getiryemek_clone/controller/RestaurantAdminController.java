@@ -26,8 +26,6 @@ import java.util.List;
 public class RestaurantAdminController {
 
     private final RestaurantAdminService restaurantAdminService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
@@ -63,7 +61,7 @@ public class RestaurantAdminController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PostMapping("/generateToken")
+    @PostMapping("/login")
     public ResponseEntity<ApiResponse> generateToken(@RequestBody AuthRequest request) {
         ApiResponse<String> response=restaurantAdminService.generateToken(request);
         return response.isSuccess()? ResponseEntity.ok(response)
