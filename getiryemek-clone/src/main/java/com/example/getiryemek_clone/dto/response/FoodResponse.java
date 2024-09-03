@@ -3,6 +3,8 @@ package com.example.getiryemek_clone.dto.response;
 import com.example.getiryemek_clone.entity.Category;
 import com.example.getiryemek_clone.entity.Restaurant;
 import com.example.getiryemek_clone.repository.FoodRepository;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import java.math.BigDecimal;

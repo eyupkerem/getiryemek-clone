@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class SendEmailServiceImpl implements SendEmailService {
 
+
     private final JavaMailSender javaMailSender;
 
     private String mailFrom = "infogetiryemek@gmail.com";

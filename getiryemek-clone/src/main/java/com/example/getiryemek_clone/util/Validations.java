@@ -25,6 +25,4 @@ public final class Validations {
     public static final String INVALID_CREDENTIALS = "Invalid credentials";
     public static final String TOKEN_GENERATED = "Token generated successfully";
     public static final String FIELDS_NOT_EMPTY="All fields must be non-empty";
-
-
 }

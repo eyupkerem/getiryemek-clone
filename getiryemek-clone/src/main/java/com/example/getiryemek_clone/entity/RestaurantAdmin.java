@@ -1,6 +1,7 @@
 package com.example.getiryemek_clone.entity;
 
 import com.example.getiryemek_clone.entity.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.Setter;
 public class RestaurantAdmin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     @Column(nullable = false)

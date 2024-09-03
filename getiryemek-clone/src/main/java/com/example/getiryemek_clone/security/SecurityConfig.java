@@ -36,6 +36,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/restaurant-admin/login").permitAll()
                                 .requestMatchers("/swagger-ui/index.html#/").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/costumer").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement( x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

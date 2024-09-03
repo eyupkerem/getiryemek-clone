@@ -1,6 +1,8 @@
 package com.example.getiryemek_clone.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +17,7 @@ import java.util.List;
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonManagedReference
     private Long id;
 
     @Column(nullable = false)
@@ -27,6 +30,7 @@ public class Restaurant {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "restaurant" , cascade = CascadeType.ALL , orphanRemoval = true)
+    @JsonIgnore
     private List<Food> foods;
 
     @OneToMany(mappedBy = "restaurant" , cascade = CascadeType.ALL , orphanRemoval = true)

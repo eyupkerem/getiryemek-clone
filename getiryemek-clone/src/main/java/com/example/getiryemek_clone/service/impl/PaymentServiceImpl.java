@@ -51,11 +51,17 @@ public class PaymentServiceImpl implements PaymentService {
         Basket basket = basketRepository.findByCostumerId(id).orElseThrow(
                 ()-> new RuntimeException(BASKET_NOT_FOUND)
         );
+
         PaymentType orderPaymentType=findPaymentType(paymentType);
+
+        if (costumer.getAddresses().isEmpty()){
+            return ApiResponse.failure(ADDRESS_NOT_FOUND);
+        }
 
         if (basket.getItems().isEmpty()) {
             return ApiResponse.failure(BASKET_EMPTY);
         }
+
         BigDecimal amount = basket.getTotalAmount();
 
         Restaurant orderRestaurant = basket.getItems()
@@ -88,6 +94,7 @@ public class PaymentServiceImpl implements PaymentService {
                 }
         );
 
+      //  sendInformationMail(costumer, payment, orderPaymentType, orderRestaurant, itemsDescription, amount);
         String costumerEmail = costumer.getEmail();
         String costumerName = costumer.getName();
         String costumerSurname = costumer.getSurname();
@@ -104,14 +111,16 @@ public class PaymentServiceImpl implements PaymentService {
                 " Şipariş içeriği : " + itemsDescription +" \n " +
                 " " +
                 " Sipariş Tutarı : " + amount + " TL " +"\n" +
-                " \n\n\n İyi günler dileriz . \n\n\n"
-                ;
+                " \n\n\n İyi günler dileriz . \n\n\n" ;
 
         sendEmailService.sendEmail(costumerEmail , body, subject);
 
-
         return ApiResponse.success(SUCCESS , payment);
     }
+
+   // private void sendInformationMail(Costumer costumer, Payment payment, PaymentType orderPaymentType, Restaurant orderRestaurant, String itemsDescription, BigDecimal amount) {
+
+  //  }
 
     public PaymentType findPaymentType(Long paymentType) {
         return Stream.of(PaymentType.values())
