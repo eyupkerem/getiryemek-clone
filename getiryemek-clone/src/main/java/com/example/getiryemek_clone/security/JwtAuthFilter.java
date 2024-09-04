@@ -38,7 +38,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (autHeader != null ) {
             if (autHeader.length() > 7) {
                 token = autHeader.substring(7).trim();
-                System.out.println("TOKEN " + token);
                 email = jwtService.extractEmail(token);
                 role = jwtService.extractRole(token);
 
@@ -46,7 +45,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 System.out.println("Authorization header is too short");
             }
         } else {
-            System.out.println("Authorization header is missing or invalid");
+            System.out.println(" ");
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {

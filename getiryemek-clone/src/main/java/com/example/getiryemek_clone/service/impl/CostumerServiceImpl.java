@@ -100,13 +100,11 @@ public class CostumerServiceImpl implements CostumerService {
         if (costumer==null) {
             return ApiResponse.failure(ERROR + CUSTOMER_NOT_FOUND);
         }
-
-        if (updateDto.getEmail() == null || updateDto.getEmail().isEmpty()||
-                updateDto.getName() == null || updateDto.getName().isEmpty() ||
-                updateDto.getSurname() == null || updateDto.getSurname().isEmpty() ||
-                updateDto.getPhoneNumber() == null || updateDto.getPhoneNumber().isEmpty() ||
-                updateDto.getPassword() == null || updateDto.getPassword().isEmpty()
-        ){
+      if (updateDto.getEmail().isBlank() ||
+                updateDto.getName().isBlank() ||
+                updateDto.getSurname().isBlank() ||
+                updateDto.getPhoneNumber().isBlank() ||
+                updateDto.getPassword().isBlank()){
             return ApiResponse.failure(FIELDS_NOT_EMPTY);
         }
 

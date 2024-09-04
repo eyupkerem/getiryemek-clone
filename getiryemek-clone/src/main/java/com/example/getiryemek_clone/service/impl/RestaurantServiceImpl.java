@@ -78,11 +78,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         Long id= jwtService.extractId(token);
 
-        if (updateDto.getName() == null || updateDto.getName().isEmpty() ||
-                updateDto.getPhoneNumber() == null || updateDto.getPhoneNumber().isEmpty()) {
-
+        if (updateDto.getName().isBlank() ||
+                updateDto.getPhoneNumber().isBlank()
+        ){
             return ApiResponse.failure(FIELDS_NOT_EMPTY);
         }
+
         Address address = addressRepository.findById(addressId).orElseThrow(
                 ()-> new RuntimeException(ADDRESS_NOT_FOUND)
         );

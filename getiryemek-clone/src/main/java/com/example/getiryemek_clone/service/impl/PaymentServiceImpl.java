@@ -118,10 +118,6 @@ public class PaymentServiceImpl implements PaymentService {
         return ApiResponse.success(SUCCESS , payment);
     }
 
-   // private void sendInformationMail(Costumer costumer, Payment payment, PaymentType orderPaymentType, Restaurant orderRestaurant, String itemsDescription, BigDecimal amount) {
-
-  //  }
-
     public PaymentType findPaymentType(Long paymentType) {
         return Stream.of(PaymentType.values())
                 .filter(pt -> pt.ordinal() == paymentType)

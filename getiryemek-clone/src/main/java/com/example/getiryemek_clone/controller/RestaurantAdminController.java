@@ -37,7 +37,7 @@ public class RestaurantAdminController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{restaurantAdminId}")
-    public ResponseEntity<ApiResponse> getAdminById(@PathVariable Long restaurantAdminId){
+    public ResponseEntity<ApiResponse> getRestaurantAdminById(@PathVariable Long restaurantAdminId){
         ApiResponse<RestaurantAdminResponse> response=restaurantAdminService.findById(restaurantAdminId);
         return response.isSuccess()? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

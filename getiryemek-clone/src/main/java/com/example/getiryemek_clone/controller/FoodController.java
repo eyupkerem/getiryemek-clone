@@ -37,12 +37,13 @@ public class FoodController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
     @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
-    @GetMapping("/byRestaurant/{restaurantId}")
+    @GetMapping("/by-restaurant/{restaurantId}")
     public ResponseEntity<ApiResponse> getFoodsFromRestaurant(@PathVariable Long restaurantId){
         ApiResponse<List<FoodResponse>> response = foodService.getFoodFromRestaurant(restaurantId);
         return response.isSuccess() ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
     @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
     @GetMapping("/byCategory/{categoryId}")
     public ResponseEntity<ApiResponse> getFoodsByCategory(@PathVariable Long categoryId){

@@ -75,11 +75,13 @@ public class AddressServiceImpl implements AddressService {
 
     public ApiResponse<AddressResponse> update(Long addressId, AddressUpdateDto updateDto) {
 
-        if (updateDto.getCity() == null || updateDto.getCity().isEmpty() ||
-                updateDto.getStreet() == null || updateDto.getStreet().isEmpty() ||
-                updateDto.getZipCode() == null || updateDto.getZipCode().isEmpty() ||
-                updateDto.getNumber() <0) {
+        if (updateDto.getCity().isBlank() ||
+                updateDto.getStreet().isBlank() ||
+                updateDto.getZipCode().isBlank() ||
+                updateDto.getNumber()<0
+        ){
             return ApiResponse.failure(FIELDS_NOT_EMPTY);
+
         }
 
         return addressRepository.findById(addressId)

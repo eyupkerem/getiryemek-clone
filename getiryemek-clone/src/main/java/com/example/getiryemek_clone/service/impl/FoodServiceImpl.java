@@ -80,9 +80,7 @@ public class FoodServiceImpl implements FoodService {
 
     public ApiResponse<FoodResponse> update(Long foodId, FoodUpdateDto updateDto) {
 
-        if (    updateDto.getName() == null ||
-                updateDto.getName().isEmpty() ||
-                updateDto.getPrice() == null) {
+        if (updateDto.getName().isBlank() || updateDto.getPrice() ==null){
             return ApiResponse.failure(FIELDS_NOT_EMPTY);
         }
 

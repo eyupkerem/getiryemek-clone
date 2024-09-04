@@ -98,11 +98,13 @@ public class RestaurantAdminServiceImpl implements RestaurantAdminService {
 
     public ApiResponse<RestaurantAdminResponse> update(Long id, RestaurantAdminUpdateDto updateDto) {
 
-        if (updateDto.getName() == null ||
-                updateDto.getSurname() == null ||
-                updateDto.getPassword() == null) {
+        if (updateDto.getName().isBlank() ||
+                updateDto.getSurname().isBlank() ||
+                updateDto.getPassword().isBlank()
+        ){
             return ApiResponse.failure(FIELDS_NOT_EMPTY);
         }
+
         return restaurantAdminRepository.findById(id)
                 .map(restaurantAdmin -> {
                     restaurantAdmin.setName(updateDto.getName());
