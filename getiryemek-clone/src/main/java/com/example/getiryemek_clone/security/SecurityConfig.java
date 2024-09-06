@@ -33,6 +33,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests( x->
                         x.requestMatchers("/api/admin/login").permitAll()
                                 .requestMatchers("/api/costumer/login").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/api/admin").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/api/costumer").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/api/restaurantAdmin").permitAll()
                                 .requestMatchers("/api/restaurant-admin/login").permitAll()
                                 .requestMatchers("/swagger-ui/index.html#/").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()

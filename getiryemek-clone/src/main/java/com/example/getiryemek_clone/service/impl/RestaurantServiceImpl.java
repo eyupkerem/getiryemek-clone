@@ -12,7 +12,10 @@ import com.example.getiryemek_clone.repository.RestaurantRepository;
 import com.example.getiryemek_clone.service.JwtService;
 import com.example.getiryemek_clone.service.RestaurantService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,13 +31,16 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantMapper restaurantMapper;
     private final JwtService jwtService;
 
-    public ApiResponse<List<RestaurantResponse>> getAllRestaurants() {
+    @Cacheable(value = "restaurants" , key = "'restaurantList'" , unless = "#result == null")
+    public ApiResponse<List<RestaurantResponse>> getAllRestaurants() throws InterruptedException {
+       Thread.sleep(3000);
         List<RestaurantResponse> restaurantList = restaurantRepository.findAll()
                 .stream()
                 .map(restaurant -> restaurantMapper.toRestaurantResponse(restaurant))
                 .collect(Collectors.toList());
         return ApiResponse.success(SUCCESS , restaurantList);
     }
+
 
     public ApiResponse<RestaurantResponse> findById(Long restaurantId) {
 
@@ -52,6 +58,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .orElseGet(()-> ApiResponse.failure(RESTAURANT_NOT_FOUND));
     }
 
+    @CacheEvict(value = {"restaurants"} , allEntries = true , condition = "#restaurantDto != null")
     public ApiResponse<RestaurantResponse> add(Long addressId , RestaurantDto restaurantDto) {
         Restaurant newRestaurant =  restaurantMapper.toRestaurant(restaurantDto);
 
@@ -64,6 +71,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurantRepository.save(newRestaurant);
         return ApiResponse.success(SUCCESS , restaurantMapper.toRestaurantResponse(newRestaurant));
     }
+
 
     public ApiResponse<RestaurantResponse> update(HttpServletRequest httpServletRequest
             , RestaurantUpdateDto updateDto
@@ -101,6 +109,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
 
+    @CacheEvict(value = {"restaurants"} , allEntries = true )
     public ApiResponse<RestaurantResponse> deleteRestaurant(Long id) {
         return restaurantRepository.findById(id)
                 .map(restaurant -> {

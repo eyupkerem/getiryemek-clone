@@ -4,6 +4,7 @@ import com.example.getiryemek_clone.dto.response.FoodResponse;
 import com.example.getiryemek_clone.entity.update.FoodUpdateDto;
 import com.example.getiryemek_clone.dto.request.FoodDto;
 import com.example.getiryemek_clone.dto.response.ApiResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,11 +12,11 @@ import java.util.List;
 @Service
 public interface FoodService  {
 
-    ApiResponse<List<FoodResponse>> getAllFoods();
+    ApiResponse<List<FoodResponse>> getAllFoods() throws InterruptedException;
 
     ApiResponse<List<FoodResponse>> getFoodFromRestaurant(Long restaurantId);
 
-    ApiResponse<FoodResponse> findFoodById(Long foodId);
+    ApiResponse<FoodResponse> findFoodById(Long foodId) throws InterruptedException;
 
     ApiResponse<List<FoodResponse>> getFoodByCategory(Long categoryId);
 

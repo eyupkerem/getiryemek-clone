@@ -59,8 +59,6 @@ public class AddressServiceImpl implements AddressService {
         addressRepository.save(newAddress);
         return ApiResponse.success(SUCCESS, addressMapper.toAddressResponse(newAddress));
     }
-
-
     public ApiResponse<AddressResponse> deleteAddress(Long addressId) {
         return addressRepository.findById(addressId)
                 .map(address -> {
@@ -81,7 +79,6 @@ public class AddressServiceImpl implements AddressService {
                 updateDto.getNumber()<0
         ){
             return ApiResponse.failure(FIELDS_NOT_EMPTY);
-
         }
 
         return addressRepository.findById(addressId)

@@ -43,7 +43,7 @@ public class RestaurantAdminController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{restaurantId}")
     public ResponseEntity<ApiResponse> addRestaurantAdmin(@RequestBody RestaurantAdminDto restaurantAdminDto ,
                                                           @PathVariable Long restaurantId){

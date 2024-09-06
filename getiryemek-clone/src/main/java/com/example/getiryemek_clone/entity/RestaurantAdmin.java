@@ -32,9 +32,10 @@ public class RestaurantAdmin {
     @Column(nullable = false)
     private String email;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
-    @JsonManagedReference
+ //   @JsonManagedReference
+    @JsonIgnore
     private Restaurant restaurant;
 
 

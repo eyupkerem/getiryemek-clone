@@ -4,6 +4,7 @@ import com.example.getiryemek_clone.dto.request.FoodDto;
 import com.example.getiryemek_clone.dto.response.FoodResponse;
 import com.example.getiryemek_clone.entity.Food;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 

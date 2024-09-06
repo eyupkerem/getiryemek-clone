@@ -17,7 +17,7 @@ import java.util.List;
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonManagedReference
+    @JsonIgnore
     private Long id;
 
     @Column(nullable = false)
@@ -29,11 +29,10 @@ public class Restaurant {
     @Column(name = "phone_number",nullable = false)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "restaurant" , cascade = CascadeType.ALL , orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(mappedBy = "restaurant" , cascade = CascadeType.ALL , orphanRemoval = true ,fetch = FetchType.LAZY)
     private List<Food> foods;
 
-    @OneToMany(mappedBy = "restaurant" , cascade = CascadeType.ALL , orphanRemoval = true)
-    @JsonBackReference
+    @OneToMany(mappedBy = "restaurant" , cascade = CascadeType.ALL , orphanRemoval = true , fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<RestaurantAdmin> admins;
 }

@@ -12,7 +12,13 @@ import com.example.getiryemek_clone.repository.CategoryRepository;
 import com.example.getiryemek_clone.repository.FoodRepository;
 import com.example.getiryemek_clone.repository.RestaurantRepository;
 import com.example.getiryemek_clone.service.FoodService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +29,7 @@ import static com.example.getiryemek_clone.util.Validations.FOOD_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FoodServiceImpl implements FoodService {
     private final FoodRepository foodRepository;
     private final FoodMapper foodMapper;
@@ -30,19 +37,32 @@ public class FoodServiceImpl implements FoodService {
     private final RestaurantRepository restaurantRepository;
 
 
-    public ApiResponse<List<FoodResponse>> getAllFoods() {
-        List<FoodResponse> foodList= foodRepository.findAll()
-                .stream()
-                .map(food -> foodMapper.toFoodResponse(food))
-                .collect(Collectors.toList());
-        return ApiResponse.success(SUCCESS , foodList);
-    }
+  @Cacheable(value = "foods" , key = "'foodList'" , unless = "#result == null")
+  public ApiResponse<List<FoodResponse>> getAllFoods() throws InterruptedException {
+      Thread.sleep(3000);
+      List<FoodResponse> foodList = foodRepository.findAll()
+              .stream()
+              .map(foodMapper::toFoodResponse)
+              .collect(Collectors.toList());
 
-    public ApiResponse<FoodResponse> findFoodById(Long foodId) {
-        return foodRepository.findById(foodId)
+      if (foodList.isEmpty()) {
+          return ApiResponse.failure("No foods found");
+      }
+      return ApiResponse.success(SUCCESS , foodList);
+  }
+
+
+    @Cacheable(value = "food_id", key = "#foodId", unless = "#result == null")
+    public ApiResponse<FoodResponse> findFoodById(Long foodId) throws InterruptedException {
+        Thread.sleep(3000);
+
+        ApiResponse<FoodResponse> foodResponseApiResponse = foodRepository.findById(foodId)
                 .map(food -> ApiResponse.success(SUCCESS, foodMapper.toFoodResponse(food)))
                 .orElseGet(() -> ApiResponse.failure(FOOD_NOT_FOUND));
+
+        return foodResponseApiResponse;
     }
+
 
     public ApiResponse<List<FoodResponse>> findFoodByName(String foodName) {
         List<FoodResponse> foodList = foodRepository.findByName(foodName)
@@ -57,6 +77,8 @@ public class FoodServiceImpl implements FoodService {
         return ApiResponse.success(SUCCESS, foodList);
     }
 
+
+    @CacheEvict(value = {"foods", "resAndCatFood"}, allEntries = true, condition = "#foodDto != null")
     public ApiResponse<FoodResponse>  add(FoodDto foodDto , Long categoryId , Long restaurantId) {
         Category category  =categoryRepository.findById(categoryId).orElseThrow(
                 ()->new RuntimeException(CATEGORY_NOT_FOUND));
@@ -78,6 +100,8 @@ public class FoodServiceImpl implements FoodService {
                 .orElseGet(()->ApiResponse.failure(ERROR));
     }
 
+
+    @CacheEvict(value = {"food_id", "foods", "resAndCatFood"}, key = "#foodId")
     public ApiResponse<FoodResponse> update(Long foodId, FoodUpdateDto updateDto) {
 
         if (updateDto.getName().isBlank() || updateDto.getPrice() ==null){
@@ -99,6 +123,8 @@ public class FoodServiceImpl implements FoodService {
                 )
                 .orElseGet(() -> ApiResponse.failure(ERROR));
     }
+
+
     public ApiResponse<List<FoodResponse>> getFoodFromRestaurant(Long restaurantId) {
         List<FoodResponse> foodList =  foodRepository.getFoodFromRestaurant(restaurantId)
                 .stream()
@@ -120,6 +146,7 @@ public class FoodServiceImpl implements FoodService {
         return ApiResponse.success(SUCCESS, foodList);
     }
 
+    @Cacheable(value = {"resAndCatFood"} , key = "'catAndResFood'" , unless = "#result == null")
     public ApiResponse<List<FoodResponse>> foodWithCategoryAndRestaurant(Long restaurantId, Long categoryId) {
         List<FoodResponse> foodList = foodRepository.findByRestaurantIdAndCategoryId(restaurantId, categoryId)
                 .stream()

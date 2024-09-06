@@ -26,7 +26,7 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
     @PreAuthorize("hasAnyAuthority('USER' , 'ADMIN' , 'RESTAURANT_ADMIN')")
     @GetMapping
-    public ResponseEntity<ApiResponse> getAllRestaurants(){
+    public ResponseEntity<ApiResponse> getAllRestaurants () throws InterruptedException{
         ApiResponse<List<RestaurantResponse>> response = restaurantService.getAllRestaurants();
         return response.isSuccess()? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

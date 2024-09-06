@@ -3,10 +3,13 @@ package com.example.getiryemek_clone.controller;
 import com.example.getiryemek_clone.dto.response.FoodResponse;
 import com.example.getiryemek_clone.dto.request.FoodDto;
 import com.example.getiryemek_clone.dto.response.ApiResponse;
+import com.example.getiryemek_clone.entity.Food;
 import com.example.getiryemek_clone.entity.update.FoodUpdateDto;
 import com.example.getiryemek_clone.service.FoodService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,20 +25,21 @@ public class FoodController {
 
     private final FoodService foodService;
 
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping
-    public ResponseEntity<ApiResponse> getAllFood() {
+    public ResponseEntity<ApiResponse> getAllFood() throws InterruptedException {
         ApiResponse<List<FoodResponse>> response = foodService.getAllFoods();
         return response.isSuccess() ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
     @PreAuthorize("hasAnyAuthority('RESTAURANT_ADMIN' , 'ADMIN')")
     @GetMapping("/{foodId}")
-    public ResponseEntity<ApiResponse> getFoodById(@PathVariable Long foodId){
+    public ResponseEntity<ApiResponse> getFoodById(@PathVariable Long foodId) throws InterruptedException {
         ApiResponse<FoodResponse> response = foodService.findFoodById(foodId);
         return response.isSuccess() ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
     @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
     @GetMapping("/by-restaurant/{restaurantId}")
     public ResponseEntity<ApiResponse> getFoodsFromRestaurant(@PathVariable Long restaurantId){
