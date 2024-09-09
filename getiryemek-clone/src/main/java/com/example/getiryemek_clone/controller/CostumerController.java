@@ -7,6 +7,7 @@ import com.example.getiryemek_clone.dto.response.ApiResponse;
 import com.example.getiryemek_clone.entity.update.CostumerUpdateDto;
 import com.example.getiryemek_clone.service.CostumerService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Permission;
 import java.util.List;
 
 @RestController
@@ -75,7 +77,7 @@ public class CostumerController {
     }
 
     @PostMapping
-        public ResponseEntity<ApiResponse> addCostumer(@RequestBody CostumerDto costumerDto){
+        public ResponseEntity<ApiResponse> addCostumer(@RequestBody CostumerDto costumerDto) throws MessagingException {
             ApiResponse<CostumerResponse> response = costumerService.add(costumerDto);
             return response.isSuccess()? ResponseEntity.ok(response)
                     : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

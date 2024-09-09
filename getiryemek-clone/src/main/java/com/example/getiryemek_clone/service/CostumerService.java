@@ -5,6 +5,7 @@ import com.example.getiryemek_clone.dto.response.CostumerResponse;
 import com.example.getiryemek_clone.entity.update.CostumerUpdateDto;
 import com.example.getiryemek_clone.dto.request.CostumerDto;
 import com.example.getiryemek_clone.dto.response.ApiResponse;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,10 +23,11 @@ public interface CostumerService {
 
     ApiResponse<CostumerResponse> update(Long costumerId, CostumerUpdateDto updateDto);
 
-    ApiResponse<CostumerResponse> add(CostumerDto costumerDto);
+    ApiResponse<CostumerResponse> add(CostumerDto costumerDto) throws MessagingException;
+
+    void createPassword(Long costumerId, String newPassword );
 
     ApiResponse<CostumerResponse> deleteCostumer(Long costumerId);
-
 }
 
 

@@ -11,12 +11,15 @@ import com.example.getiryemek_clone.mapper.CostumerMapper;
 import com.example.getiryemek_clone.repository.CostumerRepository;
 import com.example.getiryemek_clone.service.CostumerService;
 import com.example.getiryemek_clone.service.JwtService;
+import com.example.getiryemek_clone.service.SendEmailService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +34,7 @@ public class CostumerServiceImpl implements CostumerService {
     private final CostumerMapper costumerMapper;
     private final PasswordEncoderConfig passwordEncoderConfig;
     private final AuthenticationManager authenticationManager;
+    private final SendEmailService sendEmailService;
     private final JwtService jwtService;
 
     public ApiResponse<List<CostumerResponse>> getAllCostumers() {
@@ -63,7 +67,8 @@ public class CostumerServiceImpl implements CostumerService {
                 .orElseGet(()->ApiResponse.failure(CUSTOMER_NOT_FOUND));
     }
 
-    public ApiResponse<CostumerResponse> add(CostumerDto costumerDto) {
+    public ApiResponse<CostumerResponse> add(CostumerDto costumerDto) throws MessagingException {
+
         if (!costumerDto.getEmail().matches("^[a-zA-Z0-9._%+-]+@gmail\\.com$")) {
             return ApiResponse.failure(GMAIL_MANDATORY);
         }
@@ -74,13 +79,27 @@ public class CostumerServiceImpl implements CostumerService {
         }
 
         Costumer newCostumer = costumerMapper.toCostumer(costumerDto);
-        String hashedPassword = passwordEncoderConfig.hashPassword(costumerDto.getPassword());
-        newCostumer.setPassword(hashedPassword);
-
 
         newCostumer.setRole(USER);
+
         costumerRepository.save(newCostumer);
+
+        String createPasswordLink = String.format("http://localhost:8080/api/create-password?costumerId=%d", newCostumer.getId());
+
+        sendEmailService.sendCreatePassword(newCostumer.getEmail(),
+                newCostumer.getName(),
+                createPasswordLink);
+
         return ApiResponse.success(SUCCESS, costumerMapper.toCostumerResponse(newCostumer));
+    }
+
+    @Override
+    public void createPassword(Long costumerId, String newPassword ) {
+        Costumer costumer = costumerRepository.findById(costumerId).orElse(null);
+        String hashedPassword = passwordEncoderConfig.hashPassword(newPassword);
+        costumer.setPassword(hashedPassword);
+        costumerRepository.save(costumer);
+
     }
 
     public ApiResponse<CostumerResponse> deleteCostumer(Long costumerId) {

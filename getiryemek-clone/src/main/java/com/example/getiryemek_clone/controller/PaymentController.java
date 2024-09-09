@@ -4,6 +4,7 @@ import com.example.getiryemek_clone.dto.response.ApiResponse;
 import com.example.getiryemek_clone.entity.Payment;
 import com.example.getiryemek_clone.service.PaymentService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,8 @@ public class   PaymentController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
     @PostMapping("/{paymentType}")
-    public ResponseEntity<ApiResponse> doPayment(HttpServletRequest httpServletRequest, @PathVariable Long paymentType){
+    public ResponseEntity<ApiResponse> doPayment(HttpServletRequest httpServletRequest, @PathVariable Long paymentType)
+            throws MessagingException {
         ApiResponse<Payment> response = paymentService.doPayment(httpServletRequest,paymentType);
         return response.isSuccess()? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

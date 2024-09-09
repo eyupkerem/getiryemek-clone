@@ -24,5 +24,8 @@ public final class Validations {
     public static final String AUTHENTICATION_FAILED = "Authentication failed. Please check your username and password";
     public static final String INVALID_CREDENTIALS = "Invalid credentials";
     public static final String TOKEN_GENERATED = "Token generated successfully";
-    public static final String FIELDS_NOT_EMPTY="All fields must be non-empty";
+    public static final String FIELDS_NOT_EMPTY = "All fields must be non-empty";
+    public static final String EMAIL_NOT_SENT = "E-posta gönderimi sırasında bir hata oluştu ";
+    public static final String INVALID_PAYMENT_TYPE = "Invalid payment Type ";
+
 }

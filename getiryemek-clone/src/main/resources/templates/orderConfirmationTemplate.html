@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+        }
+
+        .order-details {
+            margin-top: 20px;
+        }
+
+        .order-details p {
+            margin: 5px 0;
+        }
+
+        .total {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Ödemeniz alınmıştır</h1>
+    <p>Merhaba, <strong> <span th:text="${customerName}" /> </strong>!</p>
+    <p>Siparişiniz için teşekkür ederiz . Sipariş detayları aşagıdaki gibidir</p>
+
+    <div class="order-details">
+        <p><strong>Restaurant Ismi:</strong> <span th:text="${restaurantName}"/> </p>
+        <p><strong>Restaurant Telefon Numarası:</strong> <span th:text="${restaurantPhone}"/> </p>
+
+        <p><strong>Sipariş İçeriği:</strong></p>
+        <ul>
+
+            <li th:each="item : ${orderItems}">
+            <span th:text="${item.food.name}">Food Name</span>
+
+            </li>
+
+        </ul>
+        <p class="total"><strong>Total:</strong> <span th:text="${totalAmount}" />  TL</p>
+    </div>
+
+    <p>Afiyet Olsun !</p>
+    <p>Bizi tercih ettiğiniz için teşekkürler . İyi günler .</p>
+    <div class="footer">
+        <p>© 2024 Şirket Adı. Tüm hakları saklıdır.</p>
+    </div>
+</div>
+</body>
+</html>

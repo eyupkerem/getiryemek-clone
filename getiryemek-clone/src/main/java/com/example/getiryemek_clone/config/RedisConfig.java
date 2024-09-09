@@ -17,6 +17,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.*;
 
+import java.time.Duration;
+
 @Configuration
 @RequiredArgsConstructor
 @EnableCaching
@@ -51,6 +53,7 @@ public class RedisConfig {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(ApiResponse.class)))
                 .disableCachingNullValues()
+                .entryTtl(Duration.ofMinutes(1))
                 .computePrefixWith(cacheName ->  cacheName + ":");
 
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(lettuceConnectionFactory)

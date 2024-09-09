@@ -34,7 +34,6 @@ public class RestaurantAdmin {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
- //   @JsonManagedReference
     @JsonIgnore
     private Restaurant restaurant;
 

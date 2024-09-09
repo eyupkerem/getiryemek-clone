@@ -49,7 +49,7 @@ public class FoodController {
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
-    @GetMapping("/byCategory/{categoryId}")
+    @GetMapping("/by-category/{categoryId}")
     public ResponseEntity<ApiResponse> getFoodsByCategory(@PathVariable Long categoryId){
         ApiResponse<List<FoodResponse>> response = foodService.getFoodByCategory(categoryId);
         return response.isSuccess() ? ResponseEntity.ok(response)
@@ -65,7 +65,7 @@ public class FoodController {
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'RESTAURANT_ADMIN' , 'ADMIN')")
-    @GetMapping("/byRestaurantAndCategory/{restaurantId}/category/{categoryId}")
+    @GetMapping("/by-restaurant-and-category/{restaurantId}/category/{categoryId}")
     public ResponseEntity<ApiResponse> byRestaurantAndCategory(@PathVariable Long restaurantId
             , @PathVariable Long categoryId){
         ApiResponse<List<FoodResponse>> response = foodService

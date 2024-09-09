@@ -1,14 +1,11 @@
 package com.example.getiryemek_clone.entity;
 
 import com.example.getiryemek_clone.entity.enums.Role;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 
@@ -33,7 +30,7 @@ public class Costumer {
     @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @OneToMany(mappedBy = "costumer" , cascade = CascadeType.ALL , orphanRemoval = true)
