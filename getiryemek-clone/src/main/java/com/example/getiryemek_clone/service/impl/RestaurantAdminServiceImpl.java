@@ -63,9 +63,6 @@ public class RestaurantAdminServiceImpl implements RestaurantAdminService {
         if(emailExists){
             return ApiResponse.failure(EMAIL_ALREADY_IN_USE);
         }
-
-
-
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
                 () -> new RuntimeException(RESTAURANT_NOT_FOUND)
         );

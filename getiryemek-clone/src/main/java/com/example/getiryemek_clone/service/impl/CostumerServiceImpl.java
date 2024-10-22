@@ -79,17 +79,12 @@ public class CostumerServiceImpl implements CostumerService {
         }
 
         Costumer newCostumer = costumerMapper.toCostumer(costumerDto);
-
         newCostumer.setRole(USER);
-
         costumerRepository.save(newCostumer);
-
         String createPasswordLink = String.format("http://localhost:8080/api/create-password?costumerId=%d", newCostumer.getId());
-
         sendEmailService.sendCreatePassword(newCostumer.getEmail(),
                 newCostumer.getName(),
                 createPasswordLink);
-
         return ApiResponse.success(SUCCESS, costumerMapper.toCostumerResponse(newCostumer));
     }
 

@@ -38,6 +38,7 @@ public class JwtServiceImpl implements JwtService {
         claims.put("id" , admin.getId());
         return createToken(claims  , email);
     }
+
     public String generateCostumerToken(String email){
         Map<String , Object> claims = new HashMap<>();
         Costumer costumer = costumerRepository.findByEmail(email).orElse(null);

@@ -13,14 +13,11 @@ public class ApiResponse<T> {
     private boolean success;
     private String message;
     private T data;
-   // private LocalDateTime datetime;
 
     public ApiResponse(boolean success,String message, T data ) {
         this.success=success;
         this.message = message;
         this.data = data;
-       // this.datetime = datetime;
-
     }
 
     public static <T> ApiResponse<T> success(String message,T data) {
@@ -28,7 +25,6 @@ public class ApiResponse<T> {
                 true,
                 message,
                 data
-               // LocalDateTime.now()
         );
     }
 

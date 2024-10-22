@@ -23,8 +23,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final AdminRepository adminRepository;
     private final RestaurantAdminRepository restaurantAdminRepository;
 
-
-
     @Override
     public CostumUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return Stream.of(

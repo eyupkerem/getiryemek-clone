@@ -105,17 +105,15 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
-			<version>3.1.0</version> <!-- Spring Boot 3.1.0 ve üzeri Java 21 ile uyumludur -->
+			<version>3.1.0</version>
 		</dependency>
 
-		<!-- Redis Jedis Client -->
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
-			<version>4.3.1</version> <!-- En güncel ve Java 21 uyumlu sürüm -->
+			<version>4.3.1</version>
 		</dependency>
 
-		<!-- Spring Boot Starter Cache -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
@@ -131,10 +129,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
-
-
-
-
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

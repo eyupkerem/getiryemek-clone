@@ -15,10 +15,7 @@ import com.example.getiryemek_clone.service.FoodService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,7 +66,6 @@ public class FoodServiceImpl implements FoodService {
                 .stream()
                 .map(food -> foodMapper.toFoodResponse(food))
                 .collect(Collectors.toList());
-
         if (foodList.isEmpty()) {
             return ApiResponse.failure(FOOD_NOT_FOUND);
         }
@@ -158,5 +154,4 @@ public class FoodServiceImpl implements FoodService {
         }
         return ApiResponse.success(SUCCESS, foodList);
     }
-
-    }
+}
